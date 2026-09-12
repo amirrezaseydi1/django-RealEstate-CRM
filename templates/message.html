@@ -1,0 +1,37 @@
+
+<style>
+.progress-timer{
+    width:100%;
+    animation: shrink 5s linear forwards;
+}
+
+@keyframes shrink{
+    from{width:100%;}
+    to{width:0%;}
+}
+</style>
+<div class="position-fixed top-0 p-3" style="z-index:2000; margin-top:80px; width:350px; right:20px;">
+{% if messages %}
+    {% for msg in messages %}
+        <div class="alert alert-{{ msg.tags }} alert-dismissible fade show shadow auto-dismiss">
+            {{ msg }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+
+            <div class="progress mt-2" style="height:4px;">
+                <div class="progress-bar bg-{{ msg.tags }} progress-timer"></div>
+            </div>
+
+        </div>
+    {% endfor %}
+{% endif %}
+</div>
+
+<script>
+setTimeout(function () {
+    document.querySelectorAll('.auto-dismiss').forEach(function(el){
+        let alert = new bootstrap.Alert(el);
+        alert.close();
+    });
+}, 5000);
+</script>
+

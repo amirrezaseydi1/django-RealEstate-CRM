@@ -1,0 +1,71 @@
+{% extends '_base.html' %}
+{% block title %}
+    مرحله سه
+{% endblock %}
+{% block body %}
+
+    <div class="container mt-5">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                مرحله ۳ - قیمت و اطلاعات مالک
+            </div>
+
+            <div class="card-body">
+
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    <div class="mb-3">
+                        <label class="form-label">نام مالک</label>
+                        {{ form.owner_name }}
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">شماره تماس</label>
+                        {{ form.owner_phone }}
+                    </div>
+
+
+                    {% if deal_type == "SALE" %}
+
+                        <div class="mb-3">
+                            <label class="form-label">قیمت فروش</label>
+                            {{ form.selling_price }}
+                        </div>
+
+                    {% endif %}
+
+
+                    {% if deal_type == "RENT" %}
+
+                        <div class="mb-3">
+                            <label class="form-label">مبلغ رهن</label>
+                            {{ form.mortgage_price }}
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">مبلغ اجاره ماهانه</label>
+                            {{ form.rent_price }}
+                        </div>
+
+                    {% endif %}
+
+
+                    <div class="mb-3">
+                        <label class="form-label">عکس های ملک</label>
+                        <input type="file" name="images" multiple class="form-control" placeholder="عکس اصلی ">
+                        <input type="file" name="images" multiple class="form-control" placeholder="عکس دوم">
+                        <input type="file" name="images" multiple class="form-control" placeholder="عکس سوم">
+                    </div>
+
+                    <button class="btn btn-success w-100">
+                        انتشار آگهی
+                    </button>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

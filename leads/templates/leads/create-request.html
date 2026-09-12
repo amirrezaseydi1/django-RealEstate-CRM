@@ -1,0 +1,148 @@
+{% extends '_base.html' %}
+{% block title %}
+	ثبت درخواست مشتری
+{% endblock %}
+{% block body %}
+
+<div class="container py-4">
+
+  <!-- پیام‌ها -->
+  {% if messages %}
+    <div class="mb-3">
+      {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+          {{ message }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  <div class="card shadow-sm border-0">
+    <div class="card-header bg-white">
+      <div class="d-flex align-items-center justify-content-between">
+        <h5 class="mb-0">ایجاد درخواست جدید</h5>
+        <a class="btn btn-outline-secondary btn-sm" href="{% url 'leads:request-list' %}">بازگشت</a>
+      </div>
+    </div>
+
+    <div class="card-body">
+      <form method="post" novalidate>
+        {% csrf_token %}
+
+        <div class="row g-3">
+
+          <!-- عنوان -->
+          <div class="col-12">
+            <label class="form-label">عنوان درخواست</label>
+            <input type="text" name="title" class="form-control" placeholder="مثلاً خرید آپارتمان در سعادت‌آباد" required>
+          </div>
+
+          <!-- مشتری -->
+          <div class="col-md-6">
+            <label class="form-label">مشتری</label>
+            <select name="customer" class="form-select" required>
+              <option value="" selected disabled>انتخاب کنید...</option>
+              {% for c in customers %}
+                <option value="{{ c.id }}">{{ c }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <!-- نوع ملک -->
+          <div class="col-md-6">
+            <label class="form-label">نوع ملک</label>
+            <select name="property_type" class="form-select" required>
+              <option value="" selected disabled>انتخاب کنید...</option>
+              {% for cat in categories %}
+                <option value="{{ cat.id }}">{{ cat }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <!-- نوع معامله -->
+          <div class="col-md-6">
+            <label class="form-label">نوع معامله</label>
+            <select name="dealtype" class="form-select" required>
+              <option value="" selected disabled>انتخاب کنید...</option>
+              {% for value,label in deal_types %}
+                <option value="{{ value }}">{{ label }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <!-- وضعیت -->
+{#          <div class="col-md-6">#}
+{#            <label class="form-label">وضعیت</label>#}
+{#            <select name="status" class="form-select" required>#}
+{#              <option value="" selected disabled>انتخاب کنید...</option>#}
+{#              {% for value,label in statuses %}#}
+{#                <option value="{{ value }}">{{ label }}</option>#}
+{#              {% endfor %}#}
+{#            </select>#}
+{#          </div>#}
+
+          <!-- متراژ -->
+          <div class="col-md-6">
+            <label class="form-label">حداقل متراژ</label>
+            <input type="number" name="min_area" class="form-control" min="0" placeholder="مثلاً 80">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">حداکثر متراژ</label>
+            <input type="number" name="max_area" class="form-control" min="0" placeholder="مثلاً 140">
+          </div>
+
+          <!-- قیمت‌ها -->
+          <div class="col-md-6">
+            <label class="form-label">حداقل قیمت</label>
+            <input type="number" name="min_price" class="form-control" min="0" placeholder="مثلاً 3000000000">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">حداکثر قیمت</label>
+            <input type="number" name="max_price" class="form-control" min="0" placeholder="مثلاً 6000000000">
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label">رهن</label>
+            <input type="number" name="mortgage_price" class="form-control" min="0" placeholder="مثلاً 500000000">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">اجاره</label>
+            <input type="number" name="rent_price" class="form-control" min="0" placeholder="مثلاً 25000000">
+          </div>
+
+          <!-- تعداد اتاق -->
+          <div class="col-md-6">
+            <label class="form-label">تعداد اتاق</label>
+            <input type="number" name="rooms" class="form-control" min="0" placeholder="مثلاً 2">
+          </div>
+
+          <!-- مناطق (چند انتخابی) -->
+          <div class="col-md-6">
+            <label class="form-label">مناطق</label>
+            <select name="district" class="form-select" multiple size="6">
+              {% for d in districts %}
+                <option value="{{ d.id }}">{{ d }}</option>
+              {% endfor %}
+            </select>
+            <div class="form-text">برای انتخاب چند مورد، از Ctrl (ویندوز) یا Cmd (مک) استفاده کنید.</div>
+          </div>
+
+          <!-- توضیحات -->
+          <div class="col-12">
+            <label class="form-label">توضیحات</label>
+            <textarea name="description" class="form-control" rows="4" placeholder="جزئیات درخواست مشتری..."></textarea>
+          </div>
+
+          <!-- دکمه‌ها -->
+          <div class="col-12 d-flex gap-2">
+            <button type="submit" class="btn btn-primary">ثبت درخواست</button>
+            <button type="reset" class="btn btn-outline-secondary">پاک کردن</button>
+          </div>
+
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,180 @@
+{% extends '_base.html' %}
+{% block title %}
+    ایجاد فعالیت
+{% endblock %}
+{% block body %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">ایجاد فعالیت جدید</h4>
+                </div>
+
+                <div class="card-body">
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show" role="alert">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="بستن"></button>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+
+                    <form method="post">
+                        {% csrf_token %}
+
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">مشاور</label>
+                                <input type="text" class="form-control" value="{{ request.user.username }}" disabled>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="title" class="form-label">عنوان فعالیت</label>
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    id="title"
+                                    name="title"
+                                    value="{{ request.POST.title }}"
+                                    placeholder="مثلاً تماس با مشتری"
+                                >
+                            </div>
+
+                            <div class="col-12">
+                                <label for="description" class="form-label">توضیحات</label>
+                                <textarea
+                                    class="form-control"
+                                    id="description"
+                                    name="description"
+                                    rows="4"
+                                    placeholder="توضیحات فعالیت را وارد کنید"
+                                >{{ request.POST.description }}</textarea>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label for="task_type" class="form-label">نوع کار</label>
+                                <select class="form-select" id="task_type" name="task_type">
+                                    <option value="">انتخاب کنید</option>
+                                    {% for value, label in task_types %}
+                                        <option value="{{ value }}" {% if request.POST.task_type == value %}selected{% endif %}>
+                                            {{ label }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label for="priority" class="form-label">اولویت</label>
+                                <select class="form-select" id="priority" name="priority">
+                                    <option value="">انتخاب کنید</option>
+                                    {% for value, label in priorities %}
+                                        <option value="{{ value }}" {% if request.POST.priority == value %}selected{% endif %}>
+                                            {{ label }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label for="status" class="form-label">وضعیت</label>
+                                <select class="form-select" id="status" name="status">
+                                    <option value="">انتخاب کنید</option>
+                                    {% for value, label in statuses %}
+                                        <option value="{{ value }}" {% if request.POST.status == value %}selected{% endif %}>
+                                            {{ label }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="due_date" class="form-label">تاریخ انجام</label>
+                                <input
+                                    type="date"
+                                    class="form-control"
+                                    id="due_date"
+                                    name="due_date"
+                                    value="{{ request.POST.due_date }}"
+                                >
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="due_time" class="form-label">زمان انجام</label>
+                                <input
+                                    type="time"
+                                    class="form-control"
+                                    id="due_time"
+                                    name="due_time"
+                                    value="{{ request.POST.due_time }}"
+                                >
+                            </div>
+
+                            <div class="col-md-4">
+                                <label for="related_customer" class="form-label">مشتری مرتبط</label>
+                                <select class="form-select" id="related_customer" name="related_customer">
+                                    <option value="">انتخاب کنید</option>
+                                    {% for customer in customers %}
+                                        <option value="{{ customer.id }}" {% if request.POST.related_customer == customer.id|stringformat:"s" %}selected{% endif %}>
+                                            {{ customer }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label for="related_request" class="form-label">درخواست مرتبط</label>
+                                <select class="form-select" id="related_request" name="related_request">
+                                    <option value="">انتخاب کنید</option>
+                                    {% for req in requests %}
+                                        <option value="{{ req.id }}" {% if request.POST.related_request == req.id|stringformat:"s" %}selected{% endif %}>
+                                            {{ req }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label for="related_property" class="form-label">ملک مرتبط</label>
+                                <select class="form-select" id="related_property" name="related_property">
+                                    <option value="">انتخاب کنید</option>
+                                    {% for property in properties %}
+                                        <option value="{{ property.id }}" {% if request.POST.related_property == property.id|stringformat:"s" %}selected{% endif %}>
+                                            {{ property }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="col-12">
+                                <div class="form-check mt-2">
+                                    <input
+                                        class="form-check-input"
+                                        type="checkbox"
+                                        id="sms_reminder_enabled"
+                                        name="sms_reminder_enabled"
+                                        {% if request.POST.sms_reminder_enabled %}checked{% endif %}
+                                    >
+                                    <label class="form-check-label" for="sms_reminder_enabled">
+                                        یادآور پیامکی فعال باشد
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="col-12 mt-4 d-flex gap-2">
+                                <button type="submit" class="btn btn-primary">
+                                    ثبت فعالیت
+                                </button>
+                                <a href="#" class="btn btn-outline-secondary">
+                                    انصراف
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

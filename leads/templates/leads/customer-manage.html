@@ -1,0 +1,121 @@
+{% extends '_base.html' %}
+{% block title %}
+    مشتریان
+{% endblock %}
+{% block body %}
+    <div class="container my-5">
+        <!-- پیام‌های سیستم -->
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show"
+                     role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-white">
+                <div class="d-flex align-items-center justify-content-between">
+                    <h5 class="mb-0">ایجاد درخواست جدید</h5>
+                    <a class="btn btn-outline-secondary btn-sm" href="{% url 'leads:agent-panel' %}">بازگشت</a>
+                </div>
+            </div>
+            <div class="row g-4">
+                <!-- بخش فرم ثبت اطلاعات (سمت راست در دسکتاپ) -->
+                <div class="col-lg-4 col-md-5">
+                    <div class="card p-4">
+                        <h4 class="mb-4 text-primary text-center">ثبت مشتری جدید</h4>
+                        <form action="" method="POST">
+                            {% csrf_token %}
+
+                            <div class="mb-3">
+                                <label for="name" class="form-label font-weight-bold">نام مشتری</label>
+                                <input type="text" class="form-control" id="name" name="name" required
+                                       title="شماره موبایل باید به صورت 09123456789 باشد."
+                                       placeholder="مثال: علی رضایی">
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="phone" class="form-label">شماره تلفن</label>
+                                <input type="tel" pattern="09[0-9]{9}" class="form-control" id="phone" name="phone"
+                                       required
+                                       placeholder="مثال: 09123456789">
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="desacription" class="form-label">توضیحات</label>
+                                <textarea class="form-control" id="description" name="description" rows="4"
+                                          placeholder="توضیحات مربوط به مشتری..."></textarea>
+                            </div>
+
+                            <button type="submit" class="btn btn-success w-100 py-2">ثبت و ذخیره</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- بخش جدول نمایش لیست مشتریان (سمت چپ در دسکتاپ) -->
+                <div class="col-lg-8 col-md-7">
+                    <div class="card p-4">
+                        <h4 class="mb-4 text-secondary">لیست مشتریان ثبت شده</h4>
+                        {% if customers %}
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle">
+                                    <thead class="table-light">
+                                    <tr>
+                                        <th>#</th>
+                                        <th>نام مشتری</th>
+                                        <th>شماره تلفن</th>
+                                        <th>توضیحات</th>
+                                        <th>تاریخ ثبت</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for customer in customers %}
+                                        <tr>
+                                            <td>{{ forloop.counter }}</td>
+                                            <td class="fw-bold">{{ customer.name }}</td>
+                                            <td><a href="tel:{{ customer.phone }}"
+                                                   class="btn btn-outline-success btn-sm ms-2">
+                                                <i class="fa fa-phone"></i> {{ customer.phone }} (تماس مستقیم)
+                                            </a></td>
+                                            <td class="text-muted"
+                                                style="max-width: 250px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"
+                                                title="{{ customer.desacription }}">
+                                                {{ customer.desacription }}
+                                            </td>
+                                            <td>{{ customer.created_at|date:"Y/m/d - H:i" }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        {% else %}
+                            <div class="alert alert-info text-center">هیچ مشتری‌ای در سیستم ثبت نشده است.</div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {##}
+        <script>
+            const phone = document.getElementById("phone");
+
+            phone.addEventListener("invalid", function () {
+
+                if (phone.validity.valueMissing) {
+                    phone.setCustomValidity("لطفاً شماره موبایل را وارد کنید.");
+                } else if (phone.validity.patternMismatch) {
+                    phone.setCustomValidity("شماره موبایل باید به صورت 09123456789 باشد.");
+                }
+
+            });
+
+            phone.addEventListener("input", function () {
+                phone.setCustomValidity("");
+            });
+        </script>
+
+
+{% endblock %}

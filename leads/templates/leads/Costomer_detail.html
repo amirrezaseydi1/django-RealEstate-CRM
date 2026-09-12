@@ -1,0 +1,161 @@
+{% extends '_base.html' %}
+{% block title %}
+    اطلاعات درخواست مشتری
+{% endblock %}
+{% block body %}
+    <section class="container">
+        <div class="container mt-4" dir="rtl" style="text-align: right;">
+            <h3>درخواست‌های مشتری</h3>
+            <!-- بخش مشخصات مشتری -->
+            <div class="card mb-4 shadow-sm border-0">
+                <div class="card-body">
+                    <h2 class="card-title text-primary">{{ customer.name }}</h2>
+                    <hr>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <strong>شماره تماس:</strong>
+                            {% if customer.phone %}
+                                <!-- لینک مستقیم تماس تلفنی -->
+                                <a href="tel:{{ customer.phone }}" class="btn btn-outline-success btn-sm ms-2">
+                                    <i class="fa fa-phone"></i> {{ customer.phone }} (تماس مستقیم)
+                                </a>
+                            {% else %}
+                                <span class="text-muted">ثبت نشده</span>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <strong>وضعیت مشتری:</strong>
+                            <span class="badge bg-info text-dark">فعال</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card p-3 mb-3">
+                <h5>مدیریت وضعیت درخواست</h5>
+                <hr>
+                <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+                    <div>
+                        <span>وضعیت فعلی: </span>
+                        {% if customer_request.status == 'active' %}
+                            <span class="badge bg-success p-2">{{ customer_request.get_status_display }}</span>
+                        {% elif customer_request.status == 'in_progress' %}
+                            <span class="badge bg-warning text-dark p-2">{{ customer_request.get_status_display }}</span>
+                        {% elif customer_request.status == 'closed' %}
+                            <span class="badge bg-danger p-2">{{ customer_request.get_status_display }}</span>
+                        {% elif customer_request.status == 'canceled' %}
+                            <span class="badge bg-secondary p-2">{{ customer_request.get_status_display }}</span>
+                        {% endif %}
+                    </div>
+
+                    <div class="btn-group" role="group">
+                        <!-- اگر وضعیت فعال یا در حال پیگیری باشد -->
+                        {% if customer_request.status == 'active' or customer_request.status == 'in_progress' %}
+
+                            <!-- دکمه انتقال به وضعیت در حال پیگیری (فقط در صورتی نشان داده می‌شود که از قبل در حال پیگیری نباشد) -->
+                            {% if customer_request.status != 'in_progress' %}
+                                <a href="{% url 'leads:change-request-status' customer_request.pk 'in_progress' %}"
+                                   class="btn btn-outline-warning text-dark btn-sm">
+                                    <i class="bi bi-hourglass-split"></i> انتقال به در حال پیگیری
+                                </a>
+                            {% endif %}
+
+                            <!-- دکمه بستن سریع درخواست -->
+                            <a href="{% url 'leads:change-request-status' customer_request.pk 'closed' %}"
+                               class="btn btn-outline-danger btn-sm"
+                               onclick="return confirm('آیا از بستن و آرشیو کردن این درخواست مطمئن هستید؟')">
+                                <i class="bi bi-check-circle"></i> بستن درخواست (معامله شد)
+                            </a>
+
+                            <!-- دکمه لغو سریع درخواست -->
+                            <a href="{% url 'leads:change-request-status' customer_request.pk 'canceled' %}"
+                               class="btn btn-outline-secondary btn-sm"
+                               onclick="return confirm('آیا از لغو کردن این درخواست مطمئن هستید؟')">
+                                <i class="bi bi-x-circle"></i> لغو درخواست
+                            </a>
+
+                            <!-- اگر درخواست قبلاً بسته یا لغو شده باشد -->
+                        {% else %}
+                            <!-- دکمه فعال‌سازی مجدد -->
+                            <a href="{% url 'property:change-request-status' customer_request.pk 'active' %}"
+                               class="btn btn-outline-success btn-sm">
+                                <i class="bi bi-arrow-counterclockwise"></i> فعال‌سازی مجدد درخواست
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+
+
+            {% for req in requests %}
+                <div class="card mb-2 p-3">
+                    <p>نوع معامله: {{ req.get_dealtype_display }}</p>
+                    <p>نوع ملک: {{ req.property_type }}</p>
+                    <p>منطقه:
+                        {% for district in req.district.all %}
+                            {{ district }}
+                        {% empty %}
+                            <il class="h3 text-danger">منطقه ای برای نمایش وجود ندارد</il>
+                        {% endfor %}
+                    </p>
+                    <p>متراژ: {{ req.min_area }} تا {{ req.max_area }}</p>
+                    <p>بودجه: {{ req.min_price }} تا {{ req.max_price }}</p>
+                    <p>توضیحات: {{ req.description |safe }}</p>
+                </div>
+            {% empty %}
+                <p>برای این مشتری هنوز درخواستی ثبت نشده است.</p>
+            {% endfor %}
+
+
+
+            <div class="row">
+                <!-- بخش نمایش کامنت‌ها (تایم‌لاین پیگیری‌ها) -->
+                <div class="col-md-7">
+                    <div class="card shadow-sm border-0">
+                        <div class="card-header bg-secondary text-white">
+                            <h5 class="mb-0">تاریخچه پیگیری‌ها</h5>
+                        </div>
+                        <div class="card-body" style="max-height: 500px; overflow-y: auto;">
+                            {% for followup in followups %}
+                                <div class="p-3 mb-3 bg-light rounded border-start border-primary border-4">
+                                    <p class="mb-1 text-dark">{{ followup.note|safe }}</p>
+                                    <div class="d-flex justify-content-between align-items-center mt-2">
+                                        <small class="text-muted">
+                                            <i class="fa fa-calendar-alt"></i> {{ followup.created_at|date:"Y-m-d H:i" }}
+                                        </small>
+                                        {% if followup.agent %}
+                                            <small class="text-secondary">ثبت
+                                                توسط: {{ followup.agent.username }}</small>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            {% empty %}
+                                <p class="text-center text-muted py-4">هنوز هیچ پیگیری یا کامنتی برای این مشتری ثبت نشده
+                                    است.</p>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                <!-- بخش ثبت پیگیری جدید -->
+                <div class="col-md-5 mb-4">
+                    <div class="card shadow-sm border-0">
+                        <div class="card-header bg-dark text-white">
+                            <h5 class="mb-0">ثبت پیگیری / کامنت جدید</h5>
+                        </div>
+                        <div class="card-body">
+                            <form method="post">
+                                {% csrf_token %}
+                                {{ form.media }}
+                                {{ form.note }}
+                                <button type="submit" class="btn btn-primary w-100">ثبت کامنت</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+
+    </section>
+{% endblock %}

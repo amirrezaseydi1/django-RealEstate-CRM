@@ -1,0 +1,161 @@
+{% extends '_base.html' %}
+{% load static %}
+
+{% block title %}
+    ورود به حساب | مسکن فایل
+{% endblock %}
+{% block extra_css %}
+	<link rel="stylesheet" href="{% static 'assets/css/login.css' %}">
+{% endblock %}
+
+{% block body %}
+<section class="login-page">
+    <div class="container">
+        <div class="row justify-content-center align-items-center">
+            <div class="col-12 col-sm-10 col-md-8 col-lg-5 col-xl-4">
+
+                <div class="login-card">
+
+                    <div class="login-card__header text-center">
+                        <div class="login-card__icon">
+                            <i class="bi bi-person-lock"></i>
+                        </div>
+
+                        <h1>ورود به حساب</h1>
+                        <p>برای ادامه، اطلاعات حساب خود را وارد کنید.</p>
+                    </div>
+
+                    <div class="login-card__body">
+
+                        {% if form.non_field_errors %}
+                            <div class="alert alert-danger login-alert" role="alert">
+                                {% for error in form.non_field_errors %}
+                                    <div>{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+
+                        <form method="post" novalidate>
+                            {% csrf_token %}
+
+                            {% if next %}
+                                <input type="hidden" name="next" value="{{ next }}">
+                            {% endif %}
+
+                            <div class="mb-3">
+                                <label for="{{ form.username.id_for_label }}" class="form-label">
+                                    نام کاربری
+                                </label>
+
+                                <div class="input-group login-input-group">
+                                    <span class="input-group-text">
+                                        <i class="bi bi-person"></i>
+                                    </span>
+
+                                    <input
+                                        type="text"
+                                        name="{{ form.username.html_name }}"
+                                        id="{{ form.username.id_for_label }}"
+                                        value="{{ form.username.value|default_if_none:'' }}"
+                                        class="form-control {% if form.username.errors %}is-invalid{% endif %}"
+                                        placeholder="نام کاربری خود را وارد کنید"
+                                        autocomplete="username"
+                                        required
+                                    >
+                                </div>
+
+                                {% for error in form.username.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ error }}
+                                    </div>
+                                {% endfor %}
+                            </div>
+
+                            <div class="mb-4">
+                                <div class="d-flex align-items-center justify-content-between mb-2">
+                                    <label for="{{ form.password.id_for_label }}" class="form-label mb-0">
+                                        رمز عبور
+                                    </label>
+
+                                    {# اگر URL بازیابی رمز هنوز نداری، این قسمت را فعلاً حذف کن #}
+{#                                     <a href="{% url 'accounts:password_reset' %}" class="forgot-password">#}
+                                        فراموشی رمز عبور؟
+                                    </a> #}
+                                </div>
+
+                                <div class="input-group login-input-group">
+                                    <span class="input-group-text">
+                                        <i class="bi bi-lock"></i>
+                                    </span>
+
+                                    <input
+                                        type="password"
+                                        name="{{ form.password.html_name }}"
+                                        id="{{ form.password.id_for_label }}"
+                                        class="form-control {% if form.password.errors %}is-invalid{% endif %}"
+                                        placeholder="رمز عبور خود را وارد کنید"
+                                        autocomplete="current-password"
+                                        required
+                                    >
+
+                                    <button
+                                        class="btn password-toggle"
+                                        type="button"
+                                        id="togglePassword"
+                                        aria-label="نمایش یا مخفی‌کردن رمز عبور"
+                                    >
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+                                </div>
+
+                                {% for error in form.password.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ error }}
+                                    </div>
+                                {% endfor %}
+                            </div>
+
+                            <button type="submit" class="btn login-submit-btn w-100">
+                                <i class="bi bi-box-arrow-in-left"></i>
+                                ورود به حساب
+                            </button>
+                        </form>
+
+                        <div class="login-divider">
+                            <span>یا</span>
+                        </div>
+
+                        <div class="login-register-link text-center">
+                            <span>هنوز حساب کاربری ندارید؟</span>
+                            <a href="{% url 'accounts:register' %}">
+                                ثبت‌نام کنید
+                            </a>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    const togglePassword = document.getElementById('togglePassword');
+    const passwordInput = document.getElementById('{{ form.password.id_for_label }}');
+
+    if (togglePassword && passwordInput) {
+        togglePassword.addEventListener('click', function () {
+            const isPassword = passwordInput.type === 'password';
+
+            passwordInput.type = isPassword ? 'text' : 'password';
+
+            this.innerHTML = isPassword
+                ? '<i class="bi bi-eye-slash"></i>'
+                : '<i class="bi bi-eye"></i>';
+        });
+    }
+</script>
+{% endblock %}

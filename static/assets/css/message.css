@@ -1,0 +1,10 @@
+.progress-timer{
+    width:100%;
+    animation: shrink 5s linear forwards;
+}
+
+@keyframes shrink{
+    from{width:100%;}
+    to{width:0%;}
+}
+

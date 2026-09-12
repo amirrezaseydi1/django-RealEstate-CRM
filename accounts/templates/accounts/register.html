@@ -1,0 +1,40 @@
+{% extends '_base.html' %}
+{% block title %}
+    Register Account
+{% endblock %}
+{% block body %}
+    <div class="container py-5" style="margin-top: 80px">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+
+                <div class="card shadow">
+                    <div class="card-header text-center">
+                        <h4>ثبت نام</h4>
+                    </div>
+
+                    <div class="card-body">
+
+                        <form method="post">
+                            {% csrf_token %}
+
+
+                            <div class="mb-3">
+                                {{ form.as_p }}
+                            </div>
+
+                            <button type="submit" class="btn btn-primary w-100">
+                                ثبت نام
+                            </button>
+
+                        </form>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+
+{% endblock %}

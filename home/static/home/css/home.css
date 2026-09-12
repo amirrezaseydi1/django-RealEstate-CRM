@@ -1,0 +1,108 @@
+/* ================= AUDIENCE SECTION ================= */
+.audience-section {
+  background-color: #fafbfc;
+}
+
+.audience-card {
+  border-radius: 28px;
+  padding: 40px;
+  border: 1px solid #eef2f6;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* افکت هاور ملایم روی کارت‌ها */
+.audience-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.05);
+}
+
+/* استایل دهی به کارت آبی تیره */
+.audience-card.dark-blue-card {
+  background: linear-gradient(135deg, #0f2b46 0%, #173f66 100%);
+  border: none;
+}
+
+/* هماهنگ‌سازی فونت و فواصل لیست‌ها در حالت راست‌چین (RTL) */
+.feature-list li {
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+}
+
+.feature-list li i {
+  font-size: 18px;
+}
+
+/* ریسپانسیو کردن پدینگ در موبایل */
+@media (max-width: 767px) {
+  .audience-card {
+    padding: 25px;
+  }
+}
+/* ================= ACTIVE CITIES ================= */
+.active-cities-section {
+  background-color: #ffffff;
+  direction: rtl;
+}
+
+.city-card-link {
+  text-decoration: none;
+}
+
+.city-card {
+  height: 340px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.4s ease;
+}
+
+/* هاور فقط روی کارت‌های فعال کار کند */
+.city-card-link:hover .city-card {
+  transform: translateY(-8px);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.15);
+}
+
+.city-img {
+  transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.city-card-link:hover .city-img {
+  transform: scale(1.08);
+}
+
+/* افکت گرادینت تیره روی تصویر برای خوانایی بهتر متن سفید */
+.city-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(15, 23, 42, 0.85) 0%, rgba(15, 23, 42, 0.2) 60%, transparent 100%);
+  z-index: 2;
+}
+
+/* استایل مخصوص شهرهای غیرفعال (به‌زودی) */
+.disabled-city {
+  cursor: not-allowed;
+}
+
+.disabled-city .city-img {
+  filter: grayscale(80%) blur(1px);
+  opacity: 0.65;
+}
+
+.disabled-city .city-overlay {
+  background: linear-gradient(to top, rgba(30, 41, 59, 0.9) 0%, rgba(30, 41, 59, 0.4) 100%);
+}
+
+/* برچسب یا Badge به‌زودی بالای کارت */
+.badge-coming-soon {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  background-color: #ef4444; /* قرمز ملایم */
+  color: white;
+  padding: 4px 12px;
+  font-size: 11px;
+  font-weight: bold;
+  border-radius: 50px;
+  z-index: 3;
+  box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3);
+}
+

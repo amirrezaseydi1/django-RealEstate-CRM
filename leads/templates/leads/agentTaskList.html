@@ -1,0 +1,149 @@
+{% extends '_base.html' %}
+{% load static %}
+
+{% block body %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="mb-0">لیست تسک ها</h3>
+        <a href="{% url 'leads:customer_manage' %}" class="btn btn-primary">
+            ایجاد تسک جدید
+        </a>
+    </div>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="بستن"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            {% if tasks %}
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover align-middle text-center">
+                        <thead class="table-light">
+                            <tr>
+                                <th>ردیف</th>
+                                <th>عنوان</th>
+                                <th>مشتری</th>
+                                <th>نوع تسک</th>
+                                <th>اولویت</th>
+                                <th>وضعیت</th>
+                                <th>تاریخ انجام</th>
+                                <th>ساعت</th>
+                                <th>ملک</th>
+                                <th>درخواست</th>
+                                <th>عملیات</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for task in tasks %}
+                                <tr>
+                                    <td>{{ forloop.counter }}</td>
+
+                                    <td>
+                                        {{ task.title }}
+                                    </td>
+
+                                    <td>
+                                        {% if task.related_customer %}
+                                            <a href="{% url 'leads:customer-detail' task.related_customer.id %}" class="text-decoration-none">
+                                                {{ task.related_customer }}
+                                            </a>
+                                        {% else %}
+                                            -
+                                        {% endif %}
+                                    </td>
+
+                                    <td>
+                                        {{ task.get_task_type_display|default:"-" }}
+                                    </td>
+
+                                    <td>
+                                        {% if task.priority == 'high' %}
+                                            <span class="badge bg-danger">زیاد</span>
+                                        {% elif task.priority == 'medium' %}
+                                            <span class="badge bg-warning text-dark">متوسط</span>
+                                        {% elif task.priority == 'low' %}
+                                            <span class="badge bg-secondary">کم</span>
+                                        {% else %}
+                                            {{ task.get_priority_display|default:"-" }}
+                                        {% endif %}
+                                    </td>
+
+                                    <td>
+                                        {% if task.status == 'done' %}
+                                            <span class="badge bg-success">انجام شده</span>
+                                        {% elif task.status == 'pending' %}
+                                            <span class="badge bg-warning text-dark">در انتظار</span>
+                                        {% elif task.status == 'cancelled' %}
+                                            <span class="badge bg-danger">لغو شده</span>
+                                        {% else %}
+                                            {{ task.get_status_display|default:"-" }}
+                                        {% endif %}
+                                    </td>
+
+                                    <td>
+                                        {{ task.due_date|default:"-" }}
+                                    </td>
+
+                                    <td>
+                                        {{ task.due_time|default:"-" }}
+                                    </td>
+
+                                    <td>
+                                        {% if task.related_property %}
+                                            {{ task.related_property }}
+                                        {% else %}
+                                            -
+                                        {% endif %}
+                                    </td>
+
+                                    <td>
+                                        {% if task.related_request %}
+                                            {{ task.related_request }}
+                                        {% else %}
+                                            -
+                                        {% endif %}
+                                    </td>
+
+                                    <td>
+                                        <div class="d-flex justify-content-center gap-2 flex-wrap">
+                                            <a href="{% url 'leads:update_agent_task' task.id %}" class="btn btn-sm btn-outline-primary">
+                                                ویرایش
+                                            </a>
+
+                                            {% if task.status != 'done' %}
+                                                <form method="post" action="{% url 'leads:agent_task_complete' task.id %}" class="m-0">
+                                                    {% csrf_token %}
+                                                    <button type="submit" class="btn btn-sm btn-success">
+                                                        اتمام
+                                                    </button>
+                                                </form>
+                                            {% else %}
+                                                <button type="button" class="btn btn-sm btn-secondary" disabled>
+                                                    انجام شده
+                                                </button>
+                                            {% endif %}
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="text-center py-5">
+                    <h5 class="mb-3">هیچ تسکی ثبت نشده است</h5>
+                    <a href="{% url 'leads:create-agent-task' %}" class="btn btn-primary">
+                        ایجاد اولین تسک
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,34 @@
+<form method="get" action="{% url 'property:property_search' %}" class="d-grid gap-3">
+    <!-- نگه داشتن مقدار جستجوی متنی -->
+    <div>
+        <label class="form-label small text-muted mb-1 fw-semibold">جستجو</label>
+        <input type="text"
+               name="q"
+               class="form-control form-control-lg border-2"
+               placeholder="عنوان یا محله..."
+               value="{{ request.GET.q }}">
+    </div>
+
+    <div>
+        <label class="form-label small text-muted mb-1 fw-semibold">محله</label>
+        {{ filter.form.district }}
+    </div>
+
+    <div>
+        <label class="form-label small text-muted mb-1 fw-semibold">دسته‌بندی</label>
+        {{ filter.form.property_category }}
+    </div>
+
+    <div>
+        <label class="form-label small text-muted mb-1 fw-semibold">نوع معامله</label>
+        {{ filter.form.deal_type }}
+    </div>
+
+    <button type="submit" class="btn btn-primary btn-lg w-100 mt-2">
+        اعمال فیلتر
+    </button>
+
+    <a href="{% url 'property:property_search' %}" class="btn btn-light w-100 border">
+        پاک کردن همه فیلترها
+    </a>
+</form>

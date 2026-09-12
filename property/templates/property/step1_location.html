@@ -1,0 +1,99 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <title>مرحله ۱ - انتخاب موقعیت</title>
+    <style>
+        body {
+            direction: rtl;
+            font-family: sans-serif;
+            margin: 40px auto;
+            width: 500px;
+        }
+        select, button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 15px;
+            font-size: 15px;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <h2>مرحله ۱ از ۵ — انتخاب موقعیت ملک</h2>
+
+    <form method="post">
+        {% csrf_token %}
+
+        <label for="province">استان</label>
+        <select id="province" name="province">
+            <option value="">انتخاب استان</option>
+            {% for province in provinces %}
+                <option value="{{ province.id }}">{{ province.name }}</option>
+            {% endfor %}
+        </select>
+
+        <label for="city">شهر</label>
+        <select id="city" name="city">
+            <option value="">ابتدا استان را انتخاب کنید</option>
+        </select>
+
+        <label for="district">محله</label>
+        <select id="district" name="district">
+            <option value="">ابتدا شهر را انتخاب کنید</option>
+        </select>
+
+        <button type="submit" id="next-btn" disabled>مرحله بعد</button>
+    </form>
+
+    <script>
+        const provinceSelect = document.getElementById("province");
+        const citySelect = document.getElementById("city");
+        const districtSelect = document.getElementById("district");
+        const nextButton = document.getElementById("next-btn");
+
+        provinceSelect.addEventListener("change", function () {
+            const provinceId = this.value;
+            citySelect.innerHTML = '<option value="">در حال بارگذاری شهرها...</option>';
+            fetch(`/property/ajax/load-cities/?province_id=${provinceId}`)
+                .then(res => res.json())
+                .then(data => {
+                    citySelect.innerHTML = '<option value="">انتخاب شهر</option>';
+                    data.forEach(item => {
+                        citySelect.innerHTML += `<option value="${item.id}">${item.name}</option>`;
+                    });
+                    districtSelect.innerHTML = '<option value="">ابتدا شهر را انتخاب کنید</option>';
+                });
+        });
+
+        citySelect.addEventListener("change", function () {
+            const cityId = this.value;
+            districtSelect.innerHTML = '<option value="">در حال بارگذاری محله‌ها...</option>';
+            fetch(`/property/ajax/load-districts/?city_id=${cityId}`)
+                .then(res => res.json())
+                .then(data => {
+                    districtSelect.innerHTML = '<option value="">انتخاب محله</option>';
+                    data.forEach(item => {
+                        districtSelect.innerHTML += `<option value="${item.id}">${item.name}</option>`;
+                    });
+                });
+        });
+
+        // فعال شدن دکمه بعد وقتی محله انتخاب شد
+        districtSelect.addEventListener("change", function () {
+            nextButton.disabled = !this.value;
+        });
+    </script>
+</body>
+</html>

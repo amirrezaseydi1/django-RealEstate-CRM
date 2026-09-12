@@ -1,0 +1,60 @@
+{% extends '_base.html' %}
+{% block body %}
+    <div class="container py-5 card">
+        <div class="row justify-content-center">
+            <div class="col-lg-7 col-md-9">
+
+                <div class="card shadow-sm border-0">
+                    <div class="card-body p-4">
+                        <form method="POST" enctype="multipart/form-data">
+                            {% csrf_token %}
+
+                            <label>عنوان:</label>
+                            <input type="text" name="title" value="{{ prop.title }}" class="form-control">
+
+                            <label>توضیحات:</label>
+                            <textarea name="description" class="form-control">{{ prop.description }}</textarea>
+
+                            <label>محله</label>
+                            <select name="city" class="form-control">
+                                <option value="{{ prop.city.id }}">{{ prop.district }}</option>
+                                <!-- باقی شهرها -->
+                            </select>
+
+                            <label>نوع معامله:</label>
+                            <select name="deal_type">
+                                <option value="SELL" {% if prop.deal_type == "SELL" %}selected{% endif %}>فروش</option>
+                                <option value="RENT" {% if prop.deal_type == "RENT" %}selected{% endif %}>رهن/اجاره
+                                </option>
+                            </select>
+
+                            <label>قیمت فروش:</label>
+                            <input type="number" name="selling_price" value="{{ prop.selling_price }}"
+                                   class="form-control">
+
+                            <label>رهن:</label>
+                            <input type="number" name="mortgage_price" value="{{ prop.mortgage_price }}"
+                                   class="form-control">
+
+                            <label>اجاره:</label>
+                            <input type="number" name="rent_price" value="{{ prop.rent_price }}" class="form-control">
+
+                            <label>متراژ:</label>
+                            <input type="number" name="area" value="{{ prop.area }}">
+
+                            <label>تعداد اتاق:</label>
+                            <input type="number" name="room_count" value="{{ prop.rooms }}">
+
+                            <label>تصاویر جدید:</label>
+                            <input type="file" name="images" multiple value="{{ prop.images }}">
+
+                            <button type="submit" class="btn btn-primary w-100 mt-3">ذخیره تغییرات</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}

@@ -1,0 +1,77 @@
+{% extends '_base.html' %}
+
+{% block title %}
+    لیست درخواست‌ها
+{% endblock %}
+
+{% block body %}
+<div class="container py-4">
+    <h3 class="mb-4">درخواست‌های فعال</h3>
+  <div class="card shadow-sm border-0">
+    <div class="card-header bg-white">
+      <div class="d-flex align-items-center justify-content-between">
+        <h5 class="mb-0">ایجاد درخواست جدید</h5>
+        <a class="btn btn-outline-secondary btn-sm" href="{% url 'leads:agent-panel' %}">بازگشت</a>
+      </div>
+    </div>
+    <div class="row">
+        {% for req in requests %}
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card h-100 shadow-sm border-0 rounded-4 p-3">
+                <div class="card-body">
+
+                    <!-- عنوان -->
+                    <h5 class="card-title fw-bold mb-3">{{ req.title }}</h5>
+
+                    <!-- وضعیت (به عنوان دکمه یا Badge) -->
+                    <div class="mb-3">
+                        <span class="
+                            {% if req.status == 'active' %} btn btn-outline-success
+                            {% elif req.status == 'in_progress' %} btn btn-outline-warning
+                            {% elif req.status == 'closed' %} btn btn-outline-danger
+
+                            {% else %} bg-secondary {% endif %}
+                            rounded-pill px-3 py-2">
+                            {{ req.get_status_display }}
+                        </span>
+                    </div>
+
+                    <hr class="my-3">
+
+                    <!-- اطلاعات قیمت -->
+                    <div class="card-text text-muted small mb-2">
+                        <i class="bi bi-cash-stack"></i>
+                        {% if req.min_price or req.max_price %}
+                            بودجه: {{ req.min_price|default:"" }} {% if req.max_price %} تا {{ req.max_price }} {% endif %} تومان
+                        {% endif %}
+                    </div>
+
+                    <!-- رهن و اجاره -->
+                    {% if req.mortgage_price or req.rent_price %}
+                    <div class="card-text text-muted small mb-2">
+                        <i class="bi bi-house-door"></i>
+                        {% if req.mortgage_price %}رهن: {{ req.mortgage_price }}{% endif %}
+                        {% if req.rent_price %} | اجاره: {{ req.rent_price }}{% endif %}
+                    </div>
+                    {% endif %}
+
+                    <!-- مشتری -->
+                    <div class="card-text small mt-3">
+                        <strong>مشتری:</strong> {{ req.customer }}
+                    </div>
+
+                </div>
+
+                <div class="card-footer bg-transparent border-0 pt-0">
+                    <a href="{% url 'leads:customer-detail' req.pk %}" class="btn btn-outline-primary btn-sm w-100 rounded-3">مشاهده جزئیات</a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center py-5">
+            <p class="text-muted">درخواستی یافت نشد.</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

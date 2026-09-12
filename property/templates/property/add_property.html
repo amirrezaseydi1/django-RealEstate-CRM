@@ -1,0 +1,122 @@
+{% extends '_base.html' %}
+
+{% block title %}
+Add property
+{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+
+            <div class="form-box">
+
+                <h4 class="mb-4 text-center">ثبت آگهی - موقعیت ملک</h4>
+
+                <form method="post">
+                    {% csrf_token %}
+
+                    <div class="mb-3">
+                        <label class="form-label">استان</label>
+
+                        <select class="form-select" name="province" id="province">
+                            <option selected disabled>انتخاب استان</option>
+
+                            {% for province in provinces %}
+                                <option value="{{ province.id }}">
+                                    {{ province.name }}
+                                </option>
+                            {% endfor %}
+
+                        </select>
+                    </div>
+
+
+                    <div class="mb-3">
+                        <label class="form-label">شهر</label>
+
+                        <select class="form-select" name="city" id="city">
+                            <option selected disabled>ابتدا استان را انتخاب کنید</option>
+                        </select>
+                    </div>
+
+
+                    <div class="mb-3">
+                        <label class="form-label">محله</label>
+
+                        <select class="form-select" name="district" id="district">
+                            <option selected disabled>ابتدا شهر را انتخاب کنید</option>
+                        </select>
+                    </div>
+
+
+                    <div class="d-grid mt-4">
+                        <button class="btn btn-primary">
+                            مرحله بعد
+                        </button>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<script>
+
+document.getElementById("province").addEventListener("change", function () {
+
+    let provinceId = this.value;
+
+    fetch("{% url 'property:ajax_load_cities' %}?province_id=" + provinceId)
+        .then(response => response.json())
+        .then(data => {
+
+            let citySelect = document.getElementById("city");
+            citySelect.innerHTML = '<option disabled selected>انتخاب شهر</option>';
+
+            let districtSelect = document.getElementById("district");
+            districtSelect.innerHTML = '<option disabled selected>ابتدا شهر را انتخاب کنید</option>';
+
+            data.forEach(function(city){
+                let option = document.createElement("option");
+                option.value = city.id;
+                option.textContent = city.name;
+                citySelect.appendChild(option);
+            });
+
+        });
+
+});
+
+
+document.getElementById("city").addEventListener("change", function () {
+
+    let cityId = this.value;
+
+    fetch("{% url 'property:ajax_load_districts' %}?city_id=" + cityId)
+        .then(response => response.json())
+        .then(data => {
+
+            let districtSelect = document.getElementById("district");
+            districtSelect.innerHTML = '<option disabled selected>انتخاب محله</option>';
+
+            data.forEach(function(district){
+                let option = document.createElement("option");
+                option.value = district.id;
+                option.textContent = district.name;
+                districtSelect.appendChild(option);
+            });
+
+        });
+
+});
+
+
+</script>
+
+{% endblock %}

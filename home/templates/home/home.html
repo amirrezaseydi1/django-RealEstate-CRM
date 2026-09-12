@@ -1,0 +1,617 @@
+{% extends '_base.html' %}
+{% load static %}
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'assets/css/home.css' %}">
+{% endblock %}
+<link rel="stylesheet" href="{% static 'home/css/home.css' %}">
+
+{% block body %}
+
+    <!-- ================= HERO SECTION ================= -->
+    <section class="hero-section">
+    <div class="container">
+        {% if banner %}
+            <div class="hero-box">
+                <div class="row align-items-center g-4">
+                    <div class="col-lg-6">
+                        <div class="hero-content">
+                            <span class="hero-badge">
+                                <i class="bi bi-stars"></i>
+                                جستجوی هوشمند ملک
+                            </span>
+
+                            <h1 class="hero-title">
+                                {{ banner.title }}
+                            </h1>
+
+                            {% if banner.subtitle %}
+                                <p class="hero-text">
+                                    {{ banner.subtitle }}
+                                </p>
+                            {% endif %}
+
+                            <div class="hero-actions">
+                                <a href="{{ banner.login_url }}" class="hero-btn hero-btn-primary">
+                                    <i class="bi bi-box-arrow-in-left"></i>
+                                    <span>ورود به سایت</span>
+                                </a>
+
+                                <a href="{{ banner.about_url }}" class="hero-btn hero-btn-secondary">
+                                    <i class="bi bi-info-circle"></i>
+                                    <span>معرفی سایت</span>
+                                </a>
+
+                                <a href="{{ banner.cities_url }}" class="hero-btn hero-btn-outline">
+                                    <i class="bi bi-geo-alt"></i>
+                                    <span>جستجوی ملک در شهرها</span>
+                                </a>
+
+                                <a href="{{ banner.properties_url }}" class="hero-btn hero-btn-outline">
+                                    <i class="bi bi-buildings"></i>
+                                    <span>ورود به بخش املاک</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <div class="hero-image-wrap text-center">
+                            <div class="hero-image-glow"></div>
+                            <img
+                                src="{{ banner.image.url }}"
+                                alt="{{ banner.title }}"
+                                class="img-fluid hero-image"
+                            />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <div class="hero-empty">
+                <p>در حال حاضر بنری برای نمایش وجود ندارد.</p>
+            </div>
+        {% endif %}
+    </div>
+</section>
+
+    <section class="audience-section section-space">
+    <div class="container">
+    <div class="row g-4 justify-content-center">
+
+    <div class="audience-section py-5">
+
+        <div class="container">
+            <p>دو مسیر اصلی خانه فایل</p>
+            <h2>
+                هم برای متقاضیان ملک، هم برای مشاورین املاک
+
+            </h2>
+            <div class="row g-4 mt-4">
+
+                <!-- Buyers / Tenants / Owners -->
+                <div class="col-lg-6">
+                    <div class="audience-card light-card h-100 d-flex flex-column justify-content-between">
+                        <div>
+                            <div class="neon-icon neon-primary mb-4">
+                                <i class="bi bi-house-door-fill"></i>
+                            </div>
+
+                            <h3 class="fw-bold mb-3">برای خریداران، مستأجران و مالکان</h3>
+                            <p class="text-muted mb-4">
+                                اگر به دنبال خرید خانه، فروش ملک، رهن کامل، اجاره آپارتمان یا پیدا کردن فایل
+                                <br>
+                                شخصی هستید، مسکن فایل امکان جستجوی سریع و محله‌محور را فراهم
+                                <br>
+                                می‌کند.
+                            </p>
+
+                            <ul class="feature-list list-unstyled mb-4">
+                                <li>جستجوی خرید و فروش آپارتمان، ویلا، زمین و مغازه</li>
+                                <li>مشاهده رهن و اجاره خانه در شهرهای مختلف</li>
+                                <li>بررسی فایل‌های شخصی و آگهی‌های مشاورین املاک</li>
+                                <li>فیلتر بر اساس شهر، محله، قیمت، متراژ و نوع ملک</li>
+                            </ul>
+                        </div>
+
+                        <div class="text-end">
+                            <a href="#" class="btn btn-outline-primary btn-sm rounded-pill px-3">
+                                شروع جستجوی ملک
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- Agents -->
+                <div class="col-lg-6">
+                    <div class="audience-card dark-card h-100 d-flex flex-column justify-content-between text-white">
+                        <div>
+                            <div class="neon-icon neon-cyan mb-4">
+                                <i class="bi bi-buildings-fill"></i>
+                            </div>
+
+                            <h3 class="fw-bold mb-3">برای مشاورین املاک و دفاتر فایلینگ</h3>
+                            <p class="text-white-50 mb-4">
+                                اگر مشاور املاک هستید و به نرم افزار فایلینگ، مدیریت فایل، ثبت مشتری، دسته‌بندی ملک و
+                                دسترسی سریع به فایل‌های جدید نیاز دارید، مسکن فایل برای همین هدف طراحی شده است.
+                            </p>
+
+                            <ul class="feature-list list-unstyled mb-4">
+                                <li>مدیریت فایل‌های فروش، رهن و اجاره در یک پنل منظم</li>
+                                <li>ثبت و دسته‌بندی مالک، متقاضی، مشاور و فایل ملکی</li>
+                                <li>جستجوی سریع فایل‌ها بر اساس منطقه، قیمت و امکانات</li>
+                                <li>افزایش دیده‌شدن فایل‌ها و ارتباط بهتر با متقاضیان</li>
+                            </ul>
+                        </div>
+
+                        <div class="text-end">
+                            <a href="#" class="btn btn-info btn-sm rounded-pill px-3 text-white">
+                                ورود به پنل مشاورین
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    </section>
+    <!-- ===================== ACTIVE CITIES SECTION ===================== -->
+    <section class="active-cities-section py-5">
+        <div class="container">
+
+            <!-- عنوان بخش -->
+            <div class="row mb-5 text-center">
+                <div class="col-12">
+                    <h2 class="fw-bold text-dark">شهرهای فعال املاک فایل</h2>
+                    <p class="text-muted">در حال حاضر خدمات ما در این کلان‌شهرها ارائه می‌شود</p>
+                </div>
+            </div>
+
+            <div class="row g-4 justify-content-center">
+
+                <!-- تهران -->
+                <div class="col-sm-6 col-lg-3">
+                    <a href="#" class="city-card-link">
+                        <div class="city-card position-relative overflow-hidden rounded-4">
+                            <img src="../../../static/assets/img/tehran.jpg" alt="تهران"
+                                 class="city-img w-100 h-100 object-fit-cover">
+                            <div class="city-overlay d-flex flex-column justify-content-end p-4">
+                                <h4 class="city-name fw-bold text-white mb-1">تهران</h4>
+                                <p class="city-status text-white-50 mb-0 small">سامانه فعال است</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- مشهد -->
+                <div class="col-sm-6 col-lg-3">
+                    <a href="#" class="city-card-link">
+                        <div class="city-card position-relative overflow-hidden rounded-4">
+                            <img src="../../../static/assets/img/mashad.jpg" alt="مشهد"
+                                 class="city-img w-100 h-100 object-fit-cover">
+                            <div class="city-overlay d-flex flex-column justify-content-end p-4">
+                                <h4 class="city-name fw-bold text-white mb-1">مشهد</h4>
+                                <p class="city-status text-white-50 mb-0 small">سامانه فعال است</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- اصفهان (به‌زودی) -->
+                <div class="col-sm-6 col-lg-3">
+                    <div class="city-card disabled-city position-relative overflow-hidden rounded-4">
+                        <img src="../../../static/assets/img/Isfahan.jpg" alt="اصفهان"
+                             class="city-img w-100 h-100 object-fit-cover">
+                        <div class="badge-coming-soon">به‌زودی</div>
+                        <div class="city-overlay d-flex flex-column justify-content-end p-4">
+                            <h4 class="city-name fw-bold text-white mb-1">اصفهان</h4>
+                            <p class="city-status text-white-50 mb-0 small">(به‌زودی)</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- شیراز (به‌زودی) -->
+                <div class="col-sm-6 col-lg-3">
+                    <div class="city-card disabled-city position-relative overflow-hidden rounded-4">
+                        <img src="../../../static/assets/img/shiraz.jpg" alt="شیراز"
+                             class="city-img w-100 h-100 object-fit-cover">
+                        <div class="badge-coming-soon">به‌زودی</div>
+                        <div class="city-overlay d-flex flex-column justify-content-end p-4">
+                            <h4 class="city-name fw-bold text-white mb-1">شیراز</h4>
+                            <p class="city-status text-white-50 mb-0 small">(به‌زودی)</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+    <!--  why us? -->
+    <section class="why-us-section py-5 position-relative overflow-hidden">
+        <!-- هاله‌های رنگی بسیار ملایم پس‌زمینه -->
+        <div class="bg-glow glow-cyan"></div>
+        <div class="bg-glow glow-purple"></div>
+
+        <div class="container py-4 position-relative z-1">
+            <!-- عنوان بخش (بهینه‌سازی شده برای خوانایی بهتر با محدود کردن عرض متون) -->
+            <div class="row justify-content-center text-center mb-5">
+                <div class="col-lg-8 col-md-10">
+                    <span class="why-badge mb-3">چرا مسکن فایل؟</span>
+                    <h2 class="why-title fw-extrabold mb-3">جستجوی ملک، فقط دیدن آگهی نیست</h2>
+                    <p class="why-lead text-muted lh-lg mb-4">
+                        یک تصمیم ملکی مطمئن به اطلاعات تازه، دسته‌بندی درست، مسیر ارتباط قابل اعتماد و امکان مقایسه نیاز
+                        دارد.
+                        مسکن فایل این مسیر را برای کاربر عمومی و مشاور حرفه‌ای هم‌زمان ساده می‌کند.
+                    </p>
+                    <div class="title-divider mx-auto"></div>
+                </div>
+            </div>
+
+            <!-- کارت‌های ویژگی‌ها -->
+            <div class="row g-4">
+                <!-- کارت ۱: فایل‌های کارشناسی شده -->
+                <div class="col-md-6 col-lg-3">
+                    <div class="why-card h-100 p-4">
+                        <div class="icon-box mb-4">
+                            <i class="bi bi-patch-check-fill"></i>
+                        </div>
+                        <h5 class="fw-bold mb-3">فایل‌های کارشناسی شده</h5>
+                        <p class="text-muted small lh-lg mb-0">فایل‌ها به‌صورت مستمر پایش می‌شوند تا کاربر با گزینه‌های
+                            قدیمی، تکراری یا نامرتبط کمتر مواجه شود.</p>
+                    </div>
+                </div>
+
+                <!-- کارت ۲: محله‌محور -->
+                <div class="col-md-6 col-lg-3">
+                    <div class="why-card h-100 p-4">
+                        <div class="icon-box mb-4">
+                            <i class="bi bi-geo-alt-fill"></i>
+                        </div>
+                        <h5 class="fw-bold mb-3">محله‌محور و دقیق</h5>
+                        <p class="text-muted small lh-lg mb-0">جستجو از سطح شهر شروع می‌شود و تا محله، خیابان، متراژ،
+                            قیمت و امکانات موردنیاز ادامه پیدا می‌کند.</p>
+                    </div>
+                </div>
+
+                <!-- کارت ۳: مسیر کوتاه -->
+                <div class="col-md-6 col-lg-3">
+                    <div class="why-card h-100 p-4">
+                        <div class="icon-box mb-4">
+                            <i class="bi bi-diagram-3-fill"></i>
+                        </div>
+                        <h5 class="fw-bold mb-3">مسیر کوتاه تا انتخاب</h5>
+                        <p class="text-muted small lh-lg mb-0">کاربر ابتدا شهر را انتخاب می‌کند، سپس وارد صفحه اختصاصی
+                            شهر می‌شود و بدون پیچیدگی به لیست فایل‌ها می‌رسد.</p>
+                    </div>
+                </div>
+
+                <!-- کارت ۴: فرصت‌های جدید -->
+                <div class="col-md-6 col-lg-3">
+                    <div class="why-card h-100 p-4">
+                        <div class="icon-box mb-4">
+                            <i class="bi bi-bell-fill"></i>
+                        </div>
+                        <h5 class="fw-bold mb-3">اطلاع از فرصت‌های جدید</h5>
+                        <p class="text-muted small lh-lg mb-0">با ساختار هوشمند اطلاع‌رسانی، فایل‌های مناسب با نیاز
+                            کاربر سریع‌تر دیده می‌شوند و فرصت‌های تازه از دست نمی‌روند.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Describe Agent Feature -->
+    <section class="broker-tools-section py-5">
+        <div class="container">
+            <div class="row g-4 align-items-stretch">
+                <!-- ستون کارت‌ها -->
+                <div class="col-lg-7 order-2 order-lg-1">
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <div class="broker-mini-card h-100">
+                                <div class="mini-icon">
+                                    <i class="bi bi-clipboard-data"></i>
+                                </div>
+                                <h5>فایل‌های دسته‌بندی‌شده</h5>
+                                <p>
+                                    فایل‌ها بر اساس نوع ملک، محدوده، بودجه و وضعیت معامله مرتب می‌شوند
+                                    تا دسترسی به گزینه مناسب سریع‌تر انجام شود.
+                                </p>
+                                <a href="#" class="mini-link">مشاهده فایل‌ها</a>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="broker-mini-card h-100">
+                                <div class="mini-icon">
+                                    <i class="bi bi-search"></i>
+                                </div>
+                                <h5>جستجوی دقیق و سریع</h5>
+                                <p>
+                                    از شهر و محله تا متراژ، قیمت و امکانات، کاربر می‌تواند دقیق‌تر جستجو
+                                    کند و سریع‌تر به فایل‌های مرتبط برسد.
+                                </p>
+                                <a href="#" class="mini-link">شروع جستجو</a>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="broker-mini-card h-100">
+                                <div class="mini-icon">
+                                    <i class="bi bi-bell"></i>
+                                </div>
+                                <h5>نمایش فرصت‌های جدید</h5>
+                                <p>
+                                    فایل‌های تازه و مناسب‌تر با اولویت بالاتر دیده می‌شوند تا فرصت‌های
+                                    ارزشمند در میان آگهی‌های تکراری گم نشوند.
+                                </p>
+                                <a href="#" class="mini-link">دیدن فرصت‌ها</a>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="broker-mini-card h-100">
+                                <div class="mini-icon">
+                                    <i class="bi bi-people"></i>
+                                </div>
+                                <h5>ارتباط با مشاور معتبر</h5>
+                                <p>
+                                    کاربران می‌توانند با مشاورین فعال همان شهر و منطقه ارتباط بگیرند و
+                                    مسیر انتخاب ملک را با اطمینان بیشتری ادامه دهند.
+                                </p>
+                                <a href="#" class="mini-link">یافتن مشاور</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ستون معرفی -->
+                <div class="col-lg-5 order-1 order-lg-2">
+                    <div class="broker-feature-panel h-100">
+                        <span class="panel-badge">ویژه مشاورین املاک</span>
+                        <h2>فایلینگ منظم برای مدیریت سریع‌تر فایل‌های ملکی</h2>
+                        <p>
+                            مسکن فایل به مشاورین کمک می‌کند فایل‌ها، متقاضیان و مسیر جستجوی ملک را
+                            در یک ساختار روشن‌تر مدیریت کنند. نتیجه، دسترسی سریع‌تر به فایل مناسب و
+                            ارتباط موثرتر با کاربران است.
+                        </p>
+                        <a href="#" class="panel-btn">ورود مشاورین املاک</a>
+
+                        <div class="panel-glow panel-glow-one"></div>
+                        <div class="panel-glow panel-glow-two"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- help site -->
+    <section class="guide-section py-5">
+        <div class="container">
+            <div class="guide-wrapper">
+
+                <!-- Header -->
+                <div class="guide-header text-center">
+                    <span class="guide-badge">راهنمای جامع</span>
+                    <h2>مسکن فایل؛ سامانه جستجوی ملک و فایلینگ املاک</h2>
+                    <p>
+                        مسکن فایل بستری برای جستجوی خرید، فروش، رهن و اجاره ملک در ایران است و
+                        هم‌زمان به مشاورین املاک کمک می‌کند فایل‌ها، مشتریان و پیگیری‌های خود را
+                        در یک ساختار حرفه‌ای‌تر مدیریت کنند.
+                    </p>
+                </div>
+
+                <!-- Top intro card -->
+                <div class="guide-hero-card">
+                    <div class="row g-4 align-items-center">
+                        <div class="col-lg-8">
+                            <div class="guide-hero-content">
+                                <h3>جستجوی دقیق ملک بر اساس شهر، محله و نیاز واقعی کاربر</h3>
+                                <p>
+                                    در مسکن فایل، کاربر ابتدا شهر موردنظر خود را انتخاب می‌کند و سپس
+                                    می‌تواند بر اساس محله، نوع معامله، نوع ملک، متراژ، قیمت و امکانات،
+                                    فایل‌های مناسب را با دقت بیشتری بررسی کند. این ساختار باعث می‌شود
+                                    مسیر جستجو کوتاه‌تر، سریع‌تر و کاربردی‌تر باشد.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="guide-stat-box">
+                                <div class="stat-item">
+                                    <strong>خرید و فروش</strong>
+                                    <span>آپارتمان، ویلا، زمین و مغازه</span>
+                                </div>
+                                <div class="stat-item">
+                                    <strong>رهن و اجاره</strong>
+                                    <span>خانه، آپارتمان، سوئیت و ویلایی</span>
+                                </div>
+                                <div class="stat-item">
+                                    <strong>فایل شخصی و مشاور</strong>
+                                    <span>انتخاب مسیر مناسب برای هر کاربر</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Content grid -->
+                <div class="row g-4 mt-1">
+                    <div class="col-lg-6">
+                        <div class="guide-content-card h-100">
+                            <h4>خرید، فروش، رهن و اجاره ملک در ایران</h4>
+                            <p>
+                                بازار ملک به اطلاعات دقیق و به‌روز وابسته است. تفاوت قیمت در
+                                محله‌های مختلف، شرایط پرداخت، سن بنا، امکانات، موقعیت ملک، نوع سند
+                                و وضعیت مالکیت از عواملی هستند که در تصمیم‌گیری خریداران و
+                                مستأجران نقش مستقیم دارند.
+                            </p>
+                            <p>
+                                مسکن فایل تلاش می‌کند با نمایش بهتر فایل‌ها و دسته‌بندی منظم‌تر،
+                                بررسی گزینه‌ها را برای کاربران ساده‌تر کند تا دسترسی به فایل مناسب
+                                سریع‌تر انجام شود.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <div class="guide-content-card h-100">
+                            <h4>فایل شخصی و آگهی‌های مشاورین املاک</h4>
+                            <p>
+                                برخی کاربران ترجیح می‌دهند مستقیماً با مالک در ارتباط باشند و برخی
+                                دیگر از تجربه و همراهی مشاورین املاک استفاده می‌کنند. مسکن فایل این
+                                دو مسیر را در کنار هم قرار می‌دهد تا کاربر بتواند بر اساس نیاز و
+                                اولویت خود، تصمیم دقیق‌تری بگیرد.
+                            </p>
+                            <p>
+                                این تنوع در نمایش فایل‌ها، قدرت انتخاب بیشتری به کاربران می‌دهد و
+                                باعث می‌شود فرآیند جستجو انعطاف‌پذیرتر و حرفه‌ای‌تر پیش برود.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Property categories -->
+                <div class="row g-4 mt-1">
+                    <div class="col-lg-6">
+                        <div class="guide-feature-card h-100">
+                            <div class="guide-icon">
+                                <i class="bi bi-buildings"></i>
+                            </div>
+                            <div>
+                                <h5>خرید و فروش آپارتمان، ویلا، زمین و مغازه</h5>
+                                <p>
+                                    دسته‌بندی فایل‌ها بر اساس نوع ملک و نوع معامله به کاربران کمک
+                                    می‌کند در زمان کوتاه‌تر، گزینه‌های مرتبط‌تری را پیدا و با دقت
+                                    بیشتری مقایسه کنند.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <div class="guide-feature-card h-100">
+                            <div class="guide-icon">
+                                <i class="bi bi-house-door"></i>
+                            </div>
+                            <div>
+                                <h5>رهن و اجاره خانه و آپارتمان</h5>
+                                <p>
+                                    کاربران می‌توانند فایل‌های رهن کامل، اجاره آپارتمان، خانه ویلایی
+                                    و سوئیت را بر اساس شهر، محله، بودجه، متراژ و امکانات بررسی کنند و
+                                    سریع‌تر به گزینه مناسب برسند.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Broker tools -->
+                <div class="broker-tools-box mt-4">
+                    <div class="broker-tools-header">
+                        <span class="guide-badge alt">ویژه مشاورین املاک</span>
+                        <h3>نرم‌افزار فایلینگ املاک برای مدیریت حرفه‌ای فایل‌ها و مشتریان</h3>
+                        <p>
+                            مسکن فایل برای مشاورین و مدیران آژانس فقط یک صفحه نمایش فایل نیست؛
+                            بلکه یک ساختار منظم برای ثبت، پیگیری و مدیریت فایل‌های ملکی، مشتریان
+                            و فعالیت‌های روزانه است.
+                        </p>
+                    </div>
+
+                    <div class="row g-4 mt-1">
+                        <div class="col-md-6 col-xl-4">
+                            <div class="broker-tool-card h-100">
+                                <i class="bi bi-card-checklist"></i>
+                                <h6>لیست کاری روزانه</h6>
+                                <p>
+                                    ثبت و مدیریت کارهای روزانه مشاور برای پیگیری تماس‌ها، بازدیدها،
+                                    مشتریان و فایل‌های در انتظار.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 col-xl-4">
+                            <div class="broker-tool-card h-100">
+                                <i class="bi bi-bell"></i>
+                                <h6>سیستم هشدار هوشمند</h6>
+                                <p>
+                                    یادآوری پیگیری‌ها، تماس با مشتری، تمدید فایل‌ها و کارهای مهم برای
+                                    جلوگیری از فراموشی فرصت‌های معاملاتی.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 col-xl-4">
+                            <div class="broker-tool-card h-100">
+                                <i class="bi bi-chat-dots"></i>
+                                <h6>ارسال پیامک به مشتریان</h6>
+                                <p>
+                                    اطلاع‌رسانی فایل‌های جدید، هماهنگی بازدید، یادآوری پیگیری و
+                                    ارتباط سریع‌تر با مشتریان از طریق پیامک.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 col-xl-4">
+                            <div class="broker-tool-card h-100">
+                                <i class="bi bi-people"></i>
+                                <h6>مدیریت مشاورین آژانس</h6>
+                                <p>
+                                    مدیر آژانس می‌تواند فعالیت مشاورین، وضعیت پیگیری‌ها، فایل‌ها و
+                                    روند کاری تیم را دقیق‌تر بررسی و کنترل کند.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 col-xl-4">
+                            <div class="broker-tool-card h-100">
+                                <i class="bi bi-database"></i>
+                                <h6>بانک اطلاعاتی مشتریان</h6>
+                                <p>
+                                    ثبت منظم اطلاعات مالکین، متقاضیان، سوابق تماس، بودجه، نیازها و
+                                    وضعیت پیگیری برای دسترسی سریع‌تر و ارتباط حرفه‌ای‌تر.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 col-xl-4">
+                            <div class="broker-tool-card h-100">
+                                <i class="bi bi-folder2-open"></i>
+                                <h6>فایلینگ منظم املاک</h6>
+                                <p>
+                                    مدیریت فایل‌های فروش، رهن، اجاره، پیش‌فروش، معاوضه و سایر
+                                    دسته‌بندی‌ها در یک ساختار مرتب و کاربردی.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick links -->
+                {% if quick_links %}
+                <div class="quick-links-box mt-4">
+                    <h4>لینک‌های سریع</h4>
+                    <div class="quick-links-list">
+                        {% for link in quick_links %}
+                        	<a href="{{link.url}}">{{link.title}}</a>
+                        {% endfor %}
+
+
+
+                    </div>
+                </div>
+                {% endif %}
+
+            </div>
+        </div>
+
+    </section>
+
+
+
+
+
+    </section>
+    <script src="/home/js/java.js"></script>
+
+
+{% endblock %}

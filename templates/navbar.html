@@ -1,0 +1,161 @@
+{#<!-- Navbar -->#}
+{#<!--#}
+{#<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm fixed-top">#}
+{#    <div class="container">#}
+{##}
+{#        <a class="navbar-brand d-flex align-items-center" href="{% url 'home:home' %}">#}
+{#            <i class="bi bi-building text-primary fs-3 me-2"></i>#}
+{#            <span class="fw-bold">خانه یار</span>#}
+{#        </a>#}
+{##}
+{#        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">#}
+{#            <span class="navbar-toggler-icon"></span>#}
+{#        </button>#}
+{##}
+{#        <div class="collapse navbar-collapse" id="navbarNav">#}
+{##}
+{#            <!-- Left Menu -->#}
+{#            <ul class="navbar-nav me-auto mb-2 mb-lg-0">#}
+{#                <li class="nav-item"><a class="nav-link " href="{% url 'home:home' %}">خانه</a></li>#}
+{#                <li class="nav-item"><a class="nav-link" href="{% url 'property:property_list' %}">املاک</a></li>#}
+{#                <li class="nav-item"><a class="nav-link" href="#about">درباره ما</a></li>#}
+{#                <li class="nav-item"><a class="nav-link" href="#contact">تماس</a></li>#}
+{#                {% if user.is_authenticated %}#}
+{#                    {% if user.profile.is_agent %}#}
+{##}
+{##}
+{#                        <li class="nav-item">#}
+{#                            <a class="nav-link" href="{% url 'leads:agent-panel' %}">پنل مشاور </a>#}
+{#                        </li>#}
+{#                    {% else %}#}
+{##}
+{#                        <li class="nav-item">#}
+{#                            <span class="nav-link text-danger small">کاربر عادی</span>#}
+{#                        </li>#}
+{#                    {% endif %}#}
+{#                {% endif %}#}
+{##}
+{#            </ul>#}
+{##}
+{#            <!-- Right Side -->#}
+{#            <div class="d-flex gap-2">#}
+{##}
+{#                {% if user.is_authenticated %}#}
+{##}
+{#                    {% if user.profile.is_agent %}#}
+{##}
+{#                        <!-- Dropdown for Agent Panel -->#}
+{##}
+{#                    {% endif %}#}
+{##}
+{#                    <a href="{% url 'accounts:profile' %}" class="btn btn-primary btn-sm">پروفایل</a>#}
+{#                    <a href="{% url 'accounts:logout' %}" class="btn btn-primary btn-sm">خروج</a>#}
+{##}
+{#                {% else %}#}
+{##}
+{#                    <a href="{% url 'accounts:register' %}" class="btn btn-outline-primary btn-sm">ثبت نام</a>#}
+{#                    <a href="{% url 'accounts:login' %}" class="btn btn-primary btn-sm">ورود</a>#}
+{##}
+{#                {% endif %}#}
+{##}
+{#            </div>#}
+{#        </div>#}
+{#    </div>#}
+{#</nav>#}
+{##}
+{##}
+{##}
+<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm fixed-top custom-navbar d-none d-lg-flex">
+
+    <div class="container">
+
+        <a class="navbar-brand d-flex align-items-center" href="{% url 'home:home' %}">
+            <i class="bi bi-building text-primary fs-3 me-2"></i>
+            <span class="fw-bold">املاک فایل</span>
+        </a>
+
+        <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav mx-auto mb-2 mb-lg-0 custom-nav-links">
+                <li class="nav-item">
+                    <a class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}" href="{% url 'home:home' %}">
+                        خانه
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link {% if request.resolver_match.url_name == 'property_list' %}active{% endif %}" href="{% url 'property:property_list' %}">
+                        املاک
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="#about">درباره ما</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="#contact">تماس با ما</a>
+                </li>
+
+                {% if user.is_authenticated and user.profile.is_agent %}
+                <li class="nav-item">
+                    <a class="nav-link {% if request.resolver_match.url_name == 'agent-panel' %}active{% endif %}" href="{% url 'leads:agent-panel' %}">
+                        پنل مشاور
+                    </a>
+                </li>
+                {% endif %}
+            </ul>
+
+            <div class="d-none d-lg-flex align-items-center gap-2">
+                {% if user.is_authenticated %}
+                    <a href="{% url 'accounts:profile' %}" class="btn btn-profile btn-sm">پروفایل</a>
+                    <a href="{% url 'accounts:logout' %}" class="btn btn-logout btn-sm">خروج</a>
+                {% else %}
+                    <a href="{% url 'accounts:register' %}" class="btn btn-register btn-sm">ثبت نام</a>
+                    <a href="{% url 'accounts:login' %}" class="btn btn-login btn-sm">ورود</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- Mobile Bottom Navigation -->
+<div class="mobile-bottom-nav d-flex d-lg-none">
+
+    <a href="{% url 'home:home' %}" class="mobile-nav-item {% if request.resolver_match.url_name == 'home' %}active{% endif %}">
+        <i class="bi bi-house-door"></i>
+        <span>خانه</span>
+    </a>
+
+    <a href="{% url 'property:property_list' %}" class="mobile-nav-item {% if request.resolver_match.url_name == 'property_list' %}active{% endif %}">
+        <i class="bi bi-buildings"></i>
+        <span>املاک</span>
+    </a>
+
+    <a href="#about" class="mobile-nav-item">
+        <i class="bi bi-info-circle"></i>
+        <span>درباره</span>
+    </a>
+
+    <a href="#contact" class="mobile-nav-item">
+        <i class="bi bi-telephone"></i>
+        <span>تماس</span>
+    </a>
+
+    {% if user.is_authenticated %}
+        <a href="{% url 'accounts:profile' %}" class="mobile-nav-item {% if request.resolver_match.url_name == 'profile' %}active{% endif %}">
+            <i class="bi bi-person"></i>
+            <span>پروفایل</span>
+        </a>
+    {% else %}
+        <a href="{% url 'accounts:login' %}" class="mobile-nav-item {% if request.resolver_match.url_name == 'login' %}active{% endif %}">
+            <i class="bi bi-box-arrow-in-right"></i>
+            <span>ورود</span>
+        </a>
+    {% endif %}
+</div>
+</nav>
+

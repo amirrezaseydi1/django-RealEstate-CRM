@@ -1,0 +1,188 @@
+{% extends '_base.html' %}
+{% block title %}
+	ویرایش فرم
+{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <h3 class="mb-4">
+                {% if task %}
+                    ویرایش تسک
+                {% else %}
+                    ایجاد تسک جدید
+                {% endif %}
+            </h3>
+
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+
+            <form method="post">
+                {% csrf_token %}
+
+                <div class="mb-3">
+                    <label class="form-label">عنوان</label>
+                    <input
+                        type="text"
+                        name="title"
+                        class="form-control"
+                        value="{% if request.POST.title %}{{ request.POST.title }}{% else %}{{ task.title|default:'' }}{% endif %}"
+                    >
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">توضیحات</label>
+                    <textarea name="description" class="form-control" rows="4">{% if request.POST.description %}{{ request.POST.description }}{% else %}{{ task.description|default:'' }}{% endif %}</textarea>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">مشتری</label>
+                    <select name="related_customer" class="form-select">
+                        <option value="">انتخاب مشتری</option>
+                        {% for customer in customers %}
+                            <option
+                                value="{{ customer.id }}"
+                                {% if request.POST.related_customer == customer.id|stringformat:"s" %}
+                                    selected
+                                {% elif task.related_customer and task.related_customer.id == customer.id %}
+                                    selected
+                                {% endif %}
+                            >
+                                {{ customer }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">درخواست</label>
+                    <select name="related_request" class="form-select">
+                        <option value="">انتخاب درخواست</option>
+                        {% for req in requests %}
+                            <option
+                                value="{{ req.id }}"
+                                {% if request.POST.related_request == req.id|stringformat:"s" %}
+                                    selected
+                                {% elif task.related_request and task.related_request.id == req.id %}
+                                    selected
+                                {% endif %}
+                            >
+                                {{ req }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">ملک</label>
+                    <select name="related_property" class="form-select">
+                        <option value="">انتخاب ملک</option>
+                        {% for property in properties %}
+                            <option
+                                value="{{ property.id }}"
+                                {% if request.POST.related_property == property.id|stringformat:"s" %}
+                                    selected
+                                {% elif task.related_property and task.related_property.id == property.id %}
+                                    selected
+                                {% endif %}
+                            >
+                                {{ property }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">نوع تسک</label>
+                    <select name="task_type" class="form-select">
+                        <option value="">انتخاب نوع تسک</option>
+                        {% for value, label in task_types %}
+                            <option
+                                value="{{ value }}"
+                                {% if request.POST.task_type == value %}
+                                    selected
+                                {% elif task.task_type == value %}
+                                    selected
+                                {% endif %}
+                            >
+                                {{ label }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">اولویت</label>
+                    <select name="priority" class="form-select">
+                        <option value="">انتخاب اولویت</option>
+                        {% for value, label in priorities %}
+                            <option
+                                value="{{ value }}"
+                                {% if request.POST.priority == value %}
+                                    selected
+                                {% elif task.priority == value %}
+                                    selected
+                                {% endif %}
+                            >
+                                {{ label }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">وضعیت</label>
+                    <select name="status" class="form-select">
+                        <option value="">انتخاب وضعیت</option>
+                        {% for value, label in statuses %}
+                            <option
+                                value="{{ value }}"
+                                {% if request.POST.status == value %}
+                                    selected
+                                {% elif task.status == value %}
+                                    selected
+                                {% endif %}
+                            >
+                                {{ label }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">تاریخ انجام</label>
+                    <input
+                        type="date"
+                        name="due_date"
+                        class="form-control"
+                        value="{% if request.POST.due_date %}{{ request.POST.due_date }}{% else %}{{ task.due_date|date:'Y-m-d'|default:'' }}{% endif %}"
+                    >
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">ساعت انجام</label>
+                    <input
+                        type="time"
+                        name="due_time"
+                        class="form-control"
+                        value="{% if request.POST.due_time %}{{ request.POST.due_time }}{% else %}{{ task.due_time|time:'H:i'|default:'' }}{% endif %}"
+                    >
+                </div>
+
+                <button type="submit" class="btn btn-primary">
+                    {% if task %}
+                        ذخیره تغییرات
+                    {% else %}
+                        ثبت تسک
+                    {% endif %}
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

@@ -1,0 +1,276 @@
+{% extends '_base.html' %}
+{% load humanize %}
+
+{% block title %}
+    لیست آگهی ها
+{% endblock %}
+
+{% block body %}
+<div class="container py-4">
+
+    <!-- نوار فیلترهای سریع اسکرولی برای موبایل (طرح شبیه دیوار) -->
+    <div class="d-lg-none mb-3">
+        <div class="d-flex flex-row flex-nowrap gap-2 overflow-auto pb-2 scrollbar-hidden">
+            <button class="btn btn-primary btn-sm flex-shrink-0 px-3 py-2 rounded-pill"
+                    type="button"
+                    data-bs-toggle="offcanvas"
+                    data-bs-target="#mobileFilter">
+                <i class="bi bi-sliders me-1"></i> فیلتر پیشرفته
+            </button>
+
+            <a href="?deal_type=SALE_PROPERTY{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}"
+               class="btn {% if request.GET.deal_type == 'SALE_PROPERTY' %}btn-dark{% else %}btn-outline-secondary{% endif %} btn-sm flex-shrink-0 px-3 py-2 rounded-pill">
+                فروشی
+            </a>
+
+            <a href="?deal_type=RENT_PROPERTY{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}"
+               class="btn {% if request.GET.deal_type == 'RENT_PROPERTY' %}btn-dark{% else %}btn-outline-secondary{% endif %} btn-sm flex-shrink-0 px-3 py-2 rounded-pill">
+                اجاره‌ای
+            </a>
+
+            <a href="?deal_type=MORTGAGE_PROPERTY{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}"
+               class="btn {% if request.GET.deal_type == 'MORTGAGE_PROPERTY' %}btn-dark{% else %}btn-outline-secondary{% endif %} btn-sm flex-shrink-0 px-3 py-2 rounded-pill">
+                رهن کامل
+            </a>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- سایدبار فیلتر دسکتاپ (در حالت موبایل مخفی است) -->
+        <div class="col-lg-3 d-none d-lg-block">
+            <div class="card shadow-sm border-0 sticky-top" style="top: 24px; border-radius: 16px;">
+                <div class="card-body p-4">
+                    <h5 class="mb-4 fw-bold text-dark d-flex align-items-center">
+                        <i class="bi bi-funnel me-2"></i> فیلتر و جستجو
+                    </h5>
+                    {% include "property/partials/filter_form.html" %}
+                </div>
+            </div>
+        </div>
+
+        <!-- بخش آگهی‌ها -->
+        <div class="col-lg-9">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h3 class="fw-bold text-dark mb-1">آگهی‌های املاک</h3>
+                    <p class="text-muted small mb-0">جستجو در محله‌ها و املاک منطقه</p>
+                </div>
+                <span class="badge bg-secondary-subtle text-secondary px-3 py-2 rounded-pill fs-7">
+                    {% if properties.paginator %}
+                        {{ properties.paginator.count }} آگهی یافت شد
+                    {% else %}
+                        {{ properties|length }} آگهی یافت شد
+                    {% endif %}
+                </span>
+            </div>
+
+            <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4">
+                {% for prop in properties %}
+                    <div class="col">
+                        <div class="card h-100 shadow-sm border-0 property-card">
+
+                            <!-- تصویر کارت -->
+                            <div class="position-relative overflow-hidden" style="border-radius: 16px 16px 0 0;">
+                                {% with first_image=prop.images.first %}
+                                    {% if first_image %}
+                                        <img src="{{ first_image.image.url }}"
+                                             class="card-img-top"
+                                             alt="{{ prop.title }}"
+                                             style="height:200px; object-fit:cover;">
+                                    {% else %}
+                                        <div class="bg-light d-flex align-items-center justify-content-center"
+                                             style="height:200px;">
+                                            <span class="text-muted small">بدون تصویر</span>
+                                        </div>
+                                    {% endif %}
+                                {% endwith %}
+
+                                <!-- برچسب نوع معامله روی عکس -->
+                                <span class="position-absolute top-3 start-3 badge {% if prop.deal_type == 'SALE_PROPERTY' %}bg-danger{% else %}bg-primary{% endif %} px-2.5 py-1.5 fs-8 rounded-3">
+                                    {{ prop.get_deal_type_display }}
+                                </span>
+                            </div>
+
+                            <!-- بدنه کارت -->
+                            <div class="card-body d-flex flex-column p-3.5">
+                                <h5 class="card-title text-dark fw-bold mb-2 text-truncate-2" style="font-size: 1.05rem; line-height: 1.5;">
+                                    {{ prop.title }}
+                                </h5>
+
+                                <div class="text-muted small mb-3 d-flex align-items-center">
+                                    <i class="bi bi-geo-alt me-1 text-danger"></i>
+                                    <span>{{ prop.district }}</span>
+                                </div>
+
+                                <!-- بخش قیمت‌ها -->
+                                <div class="mb-3 bg-light p-2.5 rounded-3">
+                                    {% if prop.selling_price %}
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <span class="text-muted small">قیمت خرید:</span>
+                                            <span class="fw-bold text-dark">
+                                                <span class="price">{{ prop.selling_price|floatformat:0|intcomma }}</span>
+                                                <span class="small text-muted">تومان</span>
+                                            </span>
+                                        </div>
+                                    {% endif %}
+
+                                    {% if prop.mortgage_price or prop.rent_price %}
+                                        {% if prop.mortgage_price %}
+                                            <div class="d-flex justify-content-between align-items-center {% if prop.rent_price %}mb-1.5{% endif %}">
+                                                <span class="text-muted small">رهن/ودیعه:</span>
+                                                <span class="fw-bold text-dark">
+                                                    <span class="price">{{ prop.mortgage_price|floatformat:0|intcomma }}</span>
+                                                    <span class="small text-muted">تومان</span>
+                                                </span>
+                                            </div>
+                                        {% endif %}
+                                        {% if prop.rent_price %}
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <span class="text-muted small">اجاره ماهیانه:</span>
+                                                <span class="fw-bold text-dark">
+                                                    <span class="price">{{ prop.rent_price|floatformat:0|intcomma }}</span>
+                                                    <span class="small text-muted">تومان</span>
+                                                </span>
+                                            </div>
+                                        {% endif %}
+                                    {% endif %}
+                                </div>
+
+                                <!-- اطلاعات مشاور و دکمه جزئیات -->
+                                <div class="mt-auto">
+                                    <hr class="my-3 text-black-50">
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <span class="small text-muted">
+                                            <i class="bi bi-person me-1"></i> {{ prop.agent.username }}
+                                        </span>
+                                    </div>
+                                    <a href="{% url 'property:property_detail' prop.pk %}"
+                                       class="btn btn-outline-primary w-100 rounded-3 py-2">
+                                        مشاهده جزئیات
+                                    </a>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                {% empty %}
+                    <div class="col-12">
+                        <div class="alert alert-info text-center py-5 rounded-4">
+                            <i class="bi bi-info-circle fs-3 d-block mb-2"></i>
+                            هیچ آگهی با فیلترهای فعلی شما پیدا نشد.
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <!-- Pagination (صفحه‌بندی با حفظ پارامترهای فیلتر) -->
+            {% if properties.has_other_pages %}
+                <nav class="mt-5">
+                    <ul class="pagination justify-content-center flex-wrap gap-1 border-0">
+                        {% if properties.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link rounded-3 border-0 bg-light text-dark px-3"
+                                   href="?page={{ properties.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.district %}&district={{ request.GET.district }}{% endif %}{% if request.GET.property_category %}&property_category={{ request.GET.property_category }}{% endif %}{% if request.GET.deal_type %}&deal_type={{ request.GET.deal_type }}{% endif %}">
+                                    قبلی
+                                </a>
+                            </li>
+                        {% endif %}
+
+                        {% for num in properties.paginator.page_range %}
+                            {% if properties.number == num %}
+                                <li class="page-item active">
+                                    <span class="page-link rounded-3 border-0 px-3.5">{{ num }}</span>
+                                </li>
+                            {% elif num > properties.number|add:'-3' and num < properties.number|add:'3' %}
+                                <li class="page-item">
+                                    <a class="page-link rounded-3 border-0 bg-light text-dark px-3.5"
+                                       href="?page={{ num }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.district %}&district={{ request.GET.district }}{% endif %}{% if request.GET.property_category %}&property_category={{ request.GET.property_category }}{% endif %}{% if request.GET.deal_type %}&deal_type={{ request.GET.deal_type }}{% endif %}">
+                                        {{ num }}
+                                    </a>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+
+                        {% if properties.has_next %}
+                            <li class="page-item">
+                                <a class="page-link rounded-3 border-0 bg-light text-dark px-3"
+                                   href="?page={{ properties.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.district %}&district={{ request.GET.district }}{% endif %}{% if request.GET.property_category %}&property_category={{ request.GET.property_category }}{% endif %}{% if request.GET.deal_type %}&deal_type={{ request.GET.deal_type }}{% endif %}">
+                                    بعدی
+                                </a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Offcanvas (منوی کشویی پایین به بالا در موبایل برای فیلتر پیشرفته) -->
+<div class="offcanvas offcanvas-bottom rounded-top-4"
+     tabindex="-1"
+     id="mobileFilter"
+     aria-labelledby="mobileFilterLabel"
+     style="height: 80vh;">
+    <div class="offcanvas-header border-bottom">
+        <h5 class="offcanvas-title fw-bold" id="mobileFilterLabel">
+            <i class="bi bi-sliders me-1"></i> فیلتر و جستجوی پیشرفته
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body p-4">
+        {% include "property/partials/filter_form.html" %}
+    </div>
+</div>
+
+<style>
+    /* استایل‌های سفارشی برای کارت دیوار گونه */
+    .property-card {
+        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        border-radius: 16px;
+        background-color: #fff;
+    }
+
+    .property-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 16px 32px rgba(0,0,0,0.08) !important;
+    }
+
+    /* پنهان کردن اسکرول‌بار نوار فیلترهای سریع در موبایل */
+    .scrollbar-hidden::-webkit-scrollbar {
+        display: none;
+    }
+    .scrollbar-hidden {
+        -ms-overflow-style: none;  /* IE and Edge */
+        scrollbar-width: none;  /* Firefox */
+    }
+
+    .form-select, .form-control {
+        border-radius: 10px;
+        padding: 0.6rem 0.8rem;
+    }
+
+    .form-select:focus, .form-control:focus {
+        box-shadow: 0 0 0 4px rgba(13, 110, 253, 0.15);
+    }
+
+    .text-truncate-2 {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+</style>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // تبدیل اعداد قیمت به فرمت خوانا با جداکننده هزارگان فارسی
+        document.querySelectorAll(".price").forEach(function (el) {
+            let value = el.innerText.trim().replace(/,/g, "");
+            if (value && !isNaN(value)) {
+                el.innerText = Number(value).toLocaleString('fa-IR');
+            }
+        });
+    });
+</script>
+{% endblock %}

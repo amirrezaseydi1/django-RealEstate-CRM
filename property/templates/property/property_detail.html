@@ -1,0 +1,252 @@
+{% extends '_base.html' %}
+{% load humanize %}
+
+{% block body %}
+<style>
+    /* استایل‌های اختصاصی برای شبیه‌سازی ظاهر دیوار */
+    .divar-detail-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 15px 0;
+        border-bottom: 1px solid #f0f0f0;
+    }
+    .divar-detail-label {
+        color: #8c8c8c;
+    }
+    .divar-detail-value {
+        font-weight: 500;
+        color: #000;
+    }
+    .contact-btn {
+        background-color: #0d6efd; /* رنگ قرمز شبیه به دیوار */
+        color: white;
+        font-weight: bold;
+        padding: 12px;
+        border-radius: 4px;
+        border: none;
+    }
+    .contact-btn:hover {
+        background-color: #8c1f1f;
+        color: white;
+    }
+    .thumbnail-gallery img {
+        cursor: pointer;
+        transition: opacity 0.2s;
+    }
+    .thumbnail-gallery img:hover {
+        opacity: 0.8;
+    }
+    .feature-box {
+        text-align: center;
+        color: #8c8c8c;
+    }
+    .feature-box span {
+        display: block;
+        color: #000;
+        font-weight: bold;
+        font-size: 1.1rem;
+        margin-top: 5px;
+    }
+
+</style>
+
+<div class="container mt-5 mb-5" dir="rtl">
+    <div class="row">
+
+        <!-- سمت راست: اطلاعات آگهی -->
+        <div class="col-md-7 pe-md-5">
+            <!-- عنوان و زمان -->
+            <h1 class="h4 font-weight-bold mb-3">{{ listing.title|default:"بدون عنوان" }}</h1>
+            <p class="text-muted mb-4">
+                دقایقی پیش در {{ listing.district }}
+            </p>
+
+            <!-- باکس‌های متراژ، ساخت، اتاق (ویژگی‌های کلیدی) -->
+            <!-- نکته: اگر این فیلدها را در مدل ندارید، می‌توانید آن‌ها را حذف یا با فیلدهای خود جایگزین کنید -->
+            <div class="d-flex justify-content-between border-top border-bottom py-3 mb-4">
+                <div class="feature-box flex-fill border-end">
+                    متراژ
+                    <span>{{ listing.area|default:"-" }}</span>
+                </div>
+                <div class="feature-box flex-fill border-end">
+                    ساخت
+                    <span>{{ listing.year_built|default:"-" }}</span>
+                </div>
+                <div class="feature-box flex-fill">
+                    اتاق
+                    <span>{{ listing.rooms|default:"-" }}</span>
+                </div>
+            </div>
+
+            <!-- بخش اطلاعات مالی -->
+            <div class="mb-5">
+                {% if listing.deal_type == 'sale' %}
+                    <div class="divar-detail-row">
+                        <span class="divar-detail-label">قیمت کل</span>
+                        <span class="divar-detail-value">{{ listing.selling_price|intcomma }} تومان</span>
+                    </div>
+                    <!-- می‌توانید فیلد قیمت هر متر را هم اگر دارید اینجا اضافه کنید -->
+                {% else %}
+                    <div class="divar-detail-row">
+                        <span class="divar-detail-label">ودیعه</span>
+                        <span class="divar-detail-value">{{ listing.mortgage_price|intcomma }} تومان</span>
+                    </div>
+                    <div class="divar-detail-row">
+                        <span class="divar-detail-label">اجارهٔ ماهانه</span>
+                        <span class="divar-detail-value">{{ listing.rent_price|intcomma }} تومان</span>
+                    </div>
+                {% endif %}
+                <div class="divar-detail-row">
+                    <span class="divar-detail-label">نوع آگهی</span>
+                    <span class="divar-detail-value">ارائه توسط مشاور املاک</span>
+                </div>
+            </div>
+
+            <!-- بخش توضیحات -->
+            <h5 class="font-weight-bold mb-3">توضیحات</h5>
+            <p style="white-space: pre-line; line-height: 2; color: #333;">
+                {{ listing.description|default:"توضیحاتی برای این آگهی ثبت نشده است."  |safe}}
+            </p>
+        </div>
+
+        <!-- سمت چپ: گالری تصاویر و اطلاعات تماس -->
+        <div class="col-md-5">
+
+<!-- اسلایدر عکس اصلی -->
+<div id="propertyCarousel" class="carousel slide mb-2">
+
+    <div class="carousel-inner" style="height:350px;border-radius:8px;overflow:hidden;">
+
+        {% for img in listing.images.all %}
+        <div class="carousel-item {% if forloop.first %}active{% endif %}">
+            <img src="{{ img.image.url }}" class="d-block w-100"
+                 style="height:350px;object-fit:cover;">
+        </div>
+        {% endfor %}
+
+    </div>
+
+    {% if listing.images.count > 1 %}
+    <button class="carousel-control-prev" type="button" data-bs-target="#propertyCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon"></span>
+    </button>
+
+    <button class="carousel-control-next" type="button" data-bs-target="#propertyCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon"></span>
+    </button>
+    {% endif %}
+
+</div>
+
+
+<!-- تامنیل‌ها -->
+{#{% if listing.images.count > 1 %}#}
+{#<div class="d-flex gap-2 overflow-auto thumbnail-gallery mb-4 pb-2">#}
+{#    {% for img in listing.images.all %}#}
+{#        <img src="{{ img.image.url }}" class="rounded border thumbnail-item"#}
+{#             data-index="{{ forloop.counter0 }}"#}
+{#             style="width: 80px; height: 80px; object-fit: cover; cursor: pointer;">#}
+{#    {% endfor %}#}
+{#</div>#}
+{#{% endif %}#}
+<!-- باکس اطلاعات تماس -->
+<div class="card shadow-sm border-0" style="background-color: #fff;">
+    <div class="card-body p-4">
+
+        <!-- دکمه اولیه که با کلیک مخفی می‌شود -->
+        <button id="show-contact-btn" class="btn contact-btn w-100 mb-3" type="button">
+            اطلاعات تماس
+        </button>
+
+        <!-- باکسی که شماره را نمایش می‌دهد (در ابتدا مخفی است: d-none) -->
+        <div id="contact-info-box" class="d-none mb-3">
+            <div class="d-flex justify-content-between align-items-center p-3 border rounded" style="background-color: #fcfcfc;">
+                <span class="text-muted small">شماره موبایل:</span>
+                <!-- نکته: فیلد شماره تماس را بر اساس مدل Profile خود تنظیم کنید -->
+                <span id="agent-phone-number" class="font-weight-bold fs-5" dir="ltr">
+                    {{ listing.agent.profile.phone|default:"شماره ثبت نشده" }}
+                </span>
+            </div>
+
+            <!-- دکمه کپی کردن شماره -->
+            <button id="copy-phone-btn" class="btn btn-outline-secondary w-100 mt-2 btn-sm" type="button">
+                <i class="bi bi-clipboard"></i> کپی شماره
+            </button>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center mt-3 border-top pt-3">
+            <div class="d-flex align-items-center">
+                <div class="bg-light rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 45px; height: 45px; margin-left: 10px;">
+                    <i class="bi bi-person-fill text-muted" style="font-size: 1.5rem;"></i>
+                </div>
+                <div>
+                    <h6 class="mb-0 font-weight-bold">مشاور: {{ listing.agent.username }}</h6>
+                    <small class="text-muted">عضو سایت</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+            <!-- دکمه‌های گزارش و نشان کردن (شبیه دیوار) -->
+            <div class="d-flex justify-content-center gap-4 mt-4 text-muted">
+                <span style="cursor: pointer;"><i class="bi bi-bookmark"></i> نشان کردن</span>
+                <span style="cursor: pointer;"><i class="bi bi-share"></i> اشتراک‌گذاری</span>
+                <span style="cursor: pointer;"><i class="bi bi-exclamation-octagon"></i> گزارش مشکل</span>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // دریافت المان‌ها از صفحه
+        const showContactBtn = document.getElementById('show-contact-btn');
+        const contactInfoBox = document.getElementById('contact-info-box');
+        const copyPhoneBtn = document.getElementById('copy-phone-btn');
+        const phoneNumberText = document.getElementById('agent-phone-number');
+
+        // رویداد کلیک برای دکمه "اطلاعات تماس"
+        if (showContactBtn && contactInfoBox) {
+            showContactBtn.addEventListener('click', function() {
+                // مخفی کردن دکمه قرمز
+                showContactBtn.classList.add('d-none');
+                // نمایش دادن باکس شماره موبایل
+                contactInfoBox.classList.remove('d-none');
+            });
+        }
+
+        // رویداد کلیک برای دکمه "کپی شماره"
+        if (copyPhoneBtn && phoneNumberText) {
+            copyPhoneBtn.addEventListener('click', function() {
+                // گرفتن متن شماره
+                const phoneToCopy = phoneNumberText.innerText.trim();
+
+                // بررسی اینکه مرورگر از قابلیت کپی پشتیبانی می‌کند یا خیر
+                if (navigator.clipboard) {
+                    navigator.clipboard.writeText(phoneToCopy).then(() => {
+                        // تغییر ظاهر دکمه برای نشان دادن موفقیت
+                        const originalHtml = copyPhoneBtn.innerHTML;
+                        copyPhoneBtn.innerHTML = '<i class="bi bi-check-circle"></i> کپی شد!';
+                        copyPhoneBtn.classList.replace('btn-outline-secondary', 'btn-success');
+                        copyPhoneBtn.classList.add('text-white');
+
+                        // برگرداندن دکمه به حالت اولیه بعد از ۲ ثانیه
+                        setTimeout(() => {
+                            copyPhoneBtn.innerHTML = originalHtml;
+                            copyPhoneBtn.classList.replace('btn-success', 'btn-outline-secondary');
+                            copyPhoneBtn.classList.remove('text-white');
+                        }, 2000);
+                    }).catch(err => {
+                        console.error('خطا در کپی کردن متن: ', err);
+                    });
+                } else {
+                    alert("مرورگر شما از قابلیت کپی خودکار پشتیبانی نمی‌کند.");
+                }
+            });
+        }
+    });
+</script>
+
+{% endblock %}
