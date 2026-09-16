@@ -19,7 +19,7 @@ from leads.mixins import LeadsAccessMixin
 # Create your views here.
 
 # @login_required()
-class AgentDashboardView(LoginRequiredMixin,TemplateView,LeadsAccessMixin):
+class AgentDashboardView(LeadsAccessMixin,LoginRequiredMixin,TemplateView,):
     template_name = 'leads/agent-dashboard.html'
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

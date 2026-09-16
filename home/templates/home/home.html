@@ -31,7 +31,7 @@
                             {% endif %}
 
                             <div class="hero-actions">
-                                <a href="{{ banner.login_url }}" class="hero-btn hero-btn-primary">
+                                <a href="{% url 'accounts:login' %}" class="hero-btn hero-btn-primary">
                                     <i class="bi bi-box-arrow-in-left"></i>
                                     <span>ورود به سایت</span>
                                 </a>
@@ -41,14 +41,14 @@
                                     <span>معرفی سایت</span>
                                 </a>
 
-                                <a href="{{ banner.cities_url }}" class="hero-btn hero-btn-outline">
+                                <a href="{% url 'property:property_list' %}" class="hero-btn hero-btn-outline">
                                     <i class="bi bi-geo-alt"></i>
                                     <span>جستجوی ملک در شهرها</span>
                                 </a>
 
-                                <a href="{{ banner.properties_url }}" class="hero-btn hero-btn-outline">
+                                <a href="{% url 'leads:agent-panel' %}" class="hero-btn hero-btn-outline">
                                     <i class="bi bi-buildings"></i>
-                                    <span>ورود به بخش املاک</span>
+                                    <span>ورود به پنل مشاور املاک</span>
                                 </a>
                             </div>
                         </div>

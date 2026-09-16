@@ -1,0 +1,12 @@
+{% extends '_base.html' %}
+
+{% block body %}
+<div class="container text-center my-5">
+    <div class="alert alert-warning py-4 shadow-sm">
+        <h4 class="alert-heading">خطای عدم دسترسی!</h4>
+        <p class="mb-0">{{ error_message }}</p>
+        <hr>
+        <a href="{% url 'home:home' %}" class="btn btn-dark">بازگشت به صفحه اصلی</a>
+    </div>
+</div>
+{% endblock %}
